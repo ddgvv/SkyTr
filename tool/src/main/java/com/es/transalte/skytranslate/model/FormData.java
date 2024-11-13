@@ -1,4 +1,4 @@
-package com.es.transalte.skytransalte.model;
+package com.es.transalte.skytranslate.model;
 
 import lombok.Getter;
 import lombok.Setter;

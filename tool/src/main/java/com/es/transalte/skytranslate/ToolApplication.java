@@ -1,4 +1,4 @@
-package com.es.transalte.skytransalte;
+package com.es.transalte.skytranslate;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

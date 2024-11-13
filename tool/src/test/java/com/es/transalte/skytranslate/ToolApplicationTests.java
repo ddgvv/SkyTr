@@ -1,4 +1,4 @@
-package com.es.transalte.skytransalte;
+package com.es.transalte.skytranslate;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
