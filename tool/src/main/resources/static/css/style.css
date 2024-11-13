@@ -1,0 +1,37 @@
+/* src/main/resources/static/css/style.css */
+body {
+    background-color: #24434a;
+    color: #cfd8dc;
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+h1 {
+    text-align: left;
+    margin-bottom: 20px;
+}
+
+button[type="submit"] {
+    grid-column: span 2;
+    justify-self: center;
+}
+
+.download-button {
+    display: block;
+    text-align: center;
+    margin-top: 20px;
+}
+
+button {
+    width: 250%;
+    padding: 10px;
+    background-color: #607d8b;
+    border: none;
+    border-radius: 4px;
+    color: #cfd8dc;
+    font-size: 16px;
+    cursor: pointer;
+}
