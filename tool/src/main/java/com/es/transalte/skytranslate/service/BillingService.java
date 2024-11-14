@@ -63,4 +63,17 @@ public class BillingService {
                 return null;
             }
     }
+
+    public String getBillingAccountName() {
+        try {
+            String accountName = getBillingAccount("");
+            int chIndex = accountName.lastIndexOf("/");
+            if (chIndex != -1) {
+                return accountName.substring(chIndex + 1).replace('-', '_');
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        return "";
+    }
 }
