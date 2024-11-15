@@ -28,23 +28,7 @@ public class ProvisionalController {
 
     @GetMapping("/SkyTranslate")
     public String showForm(Model model) {
-        String orgName = "";
-        String billingAccount = "";
-        Folder folder;
-        boolean customerExists;
-        Folder dealer;
-        Project project;
-        try {
-            orgName = googleResourceManagerService.getOrgName();
-            billingAccount = billingService.getBillingAccount("");
-            customerExists = googleResourceManagerService.customerExists("TBS-WEST", orgName);
-            folder = googleResourceManagerService.dealerExists("TBS-WEST", orgName);
-            dealer = googleResourceManagerService.createDealer("TBS-WEST", orgName);
-            project = googleResourceManagerService.createCustomer(dealer.getName(), dealer.getDisplayName(), "TEST");
-            System.out.println("hi");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        googleResourceManagerService.processFirstPage();
         model.addAttribute("formData", new FormData());
         return "home";
     }
