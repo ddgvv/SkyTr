@@ -5,49 +5,93 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="/css/style.css">
     <script>
-        function showDownloadButton(event) {
-            event.preventDefault(); // Prevents the form from actually submitting for demo purposes
-            document.getElementById("downloadButton").style.display = "inline-block";
+        async function submitForm(event) {
+            event.preventDefault(); // Prevent the default form submission
+
+            // Collect form data
+            const formData = {
+                dealerName: document.getElementById("dealerName").value,
+                customerName: document.getElementById("customerName").value,
+                accountType: document.getElementById("accountType").value,
+                term: document.getElementById("term").value
+            };
+
+            try {
+                // Call the API using fetch
+                const response = await fetch('/submitForm', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(formData)
+                });
+
+                if (response.ok) {
+                    // Extract file as a Blob
+                    const blob = await response.blob();
+
+                    // Create a URL for the file
+                    const url = window.URL.createObjectURL(blob);
+                    const downloadButton = document.getElementById("downloadButton");
+                    downloadButton.style.display = "inline-block";
+
+                    // Create a temporary link element for downloading
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = 'response.json'; // Filename for the downloaded file
+                    document.body.appendChild(a);
+                    a.click();
+
+                    // Clean up
+                    a.remove();
+                    window.URL.revokeObjectURL(url);
+                } else {
+                    alert("Error submitting form. Please try again.");
+                }
+            } catch (error) {
+                console.error("Error:", error);
+                alert("An unexpected error occurred.");
+            }
         }
     </script>
 </head>
 <body style="background-color: #1b2d3c; color: #a0c5c9;">
 <div class="container my-5">
     <h1 class="text-left mb-4">Elevate Sky Translate Key Management</h1>
-    <form th:action="@{/submitForm}" onsubmit="showDownloadButton(event)" th:object="${formData}" method="post" class="p-4 border rounded" style="background-color: #1b2d3c; color: #a0c5c9;">
+    <form onsubmit="submitForm(event)" class="p-4 border rounded" style="background-color: #1b2d3c; color: #a0c5c9;">
         <div class="form-row">
             <div class="form-group col-md-6">
                 <label for="dealerName">Dealer Name:</label>
-                <input type="text" class="form-control" id="dealerName" th:field="*{dealerName}" required>
+                <input type="text" class="form-control" id="dealerName" required>
             </div>
             <div class="form-group col-md-6">
                 <label for="customerName">Enter Customer Name:</label>
-                <input type="text" class="form-control" id="customerName" th:field="*{customerName}" required>
+                <input type="text" class="form-control" id="customerName" required>
             </div>
         </div>
         <div class="form-row">
             <div class="form-group col-md-6">
                 <label for="accountType">Account Type:</label>
-                <select id="accountType" class="form-control" th:field="*{accountType}" required>
+                <select id="accountType" class="form-control" required>
                     <option value="" selected>Choose an option</option>
-                    <option value="Type1">Enterprise: $3000 (25000 Pages) </option>
-                    <option value="Type1">Business: $1500 (10000 Pages) </option>
-                    <option value="Type1">Basic: $1000 (5000 Pages) </option>
+                    <option value="Enterprise">Enterprise: $3000 (25000 Pages)</option>
+                    <option value="Business">Business: $1500 (10000 Pages)</option>
+                    <option value="Basic">Basic: $1000 (5000 Pages)</option>
                 </select>
             </div>
             <div class="form-group col-md-6">
                 <label for="term">Term:</label>
-                <select id="term" class="form-control" th:field="*{term}" required>
+                <select id="term" class="form-control" required>
                     <option value="" selected>Choose an option</option>
-                    <option value="Term1">6 Months</option>
-                    <option value="Term1">1 Year</option>
-                    <option value="Term2">3 Years</option>
+                    <option value="6 Months">6 Months</option>
+                    <option value="1 Year">1 Year</option>
+                    <option value="3 Years">3 Years</option>
                 </select>
             </div>
         </div>
         <button type="submit" class="btn btn-primary btn-block" style="width: 25%;">Submit</button>
     </form>
-    <a id="downloadButton" th:href="@{/submitForm}" class="btn btn-secondary btn-block mt-3" style="width: 25%; display: none;">Download Generated Key</a>
+    <a id="downloadButton" class="btn btn-secondary btn-block mt-3" style="width: 25%; display: none;">Download Generated Key</a>
 </div>
 </body>
 </html>

@@ -38,20 +38,16 @@ public class BillingService {
                 "}";
         InputStream inputStream = new ByteArrayInputStream(credentialsPath.getBytes(StandardCharsets.UTF_8));
 
-        // Load credentials from JSON file
             Credentials credentials = ServiceAccountCredentials.fromStream(inputStream);
 
             CloudBillingSettings billingSettings = CloudBillingSettings.newBuilder()
                     .setCredentialsProvider(FixedCredentialsProvider.create(credentials))
                     .build();
 
-            // Initialize CloudBillingClient
             try (CloudBillingClient client = CloudBillingClient.create(billingSettings)) {
 
-                // Initialize the request
                 ListBillingAccountsRequest request = ListBillingAccountsRequest.newBuilder().build();
 
-                // Make the request and log the results
                 String billingAccountName = "";
                 for (BillingAccount response : client.listBillingAccounts(request).iterateAll()) {
                     logger.info("Billing Account: " + response.getName());

@@ -1,7 +1,6 @@
 package com.es.transalte.skytranslate.service;
 
 import java.util.*;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class DataFrameFilter {
@@ -12,8 +11,6 @@ public class DataFrameFilter {
         for (Map.Entry<String, FilterCriteria> entry : filterCriteria.entrySet()) {
             String column = entry.getKey();
             FilterCriteria criteria = entry.getValue();
-
-            // Apply filter based on criteria type
             switch (criteria.getType()) {
                 case CATEGORY:
                     Set<Object> categoryValues = criteria.getCategoryValues();
@@ -76,7 +73,6 @@ public class DataFrameFilter {
         private Date endDate;
         private String textPattern;
 
-        // Getters, setters, and constructors
         public FilterType getType() { return type; }
         public void setType(FilterType type) { this.type = type; }
 

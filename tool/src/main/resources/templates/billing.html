@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Billing Metrics</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #1b2d3c;
+            color: #a0c5c9;
+            padding: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 18px;
+        }
+        table thead tr {
+            background-color: #333;
+            color: white;
+        }
+        table tbody tr:nth-child(odd) {
+            background-color: #2d3e50;
+        }
+        table tbody tr:nth-child(even) {
+            background-color: #1b2d3c;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+        }
+        #chart-container {
+            margin: 30px 0;
+            display: flex;
+        }
+        #chart-sidebar {
+            margin-left: 20px;
+            padding: 10px;
+            background-color: #233748;
+            border-radius: 8px;
+        }
+        .color-box {
+            width: 15px;
+            height: 15px;
+            display: inline-block;
+            margin-right: 8px;
+        }
+    </style>
+</head>
+<body style="width: 75%;">
+<h1>Billing Metrics</h1>
+<div>
+    <input
+            type="text"
+            id="filterInput"
+            placeholder="Filter data by customer"
+            style="padding: 8px; width: 300px; margin-bottom: 10px;"
+    />
+</div>
+<table id="dataTable" >
+    <thead>
+    <tr>
+        <th>Index</th>
+        <th>Invoice Month</th>
+        <th>Customer</th>
+        <th>Dealer</th>
+        <th>Pages Translated</th>
+        <th>Cost</th>
+    </tr>
+    </thead>
+    <tbody>
+    <!-- Data will be inserted dynamically -->
+    </tbody>
+</table>
+<div style="text-align: center; margin: 20px 0;">
+    <button id="downloadCsv" style="padding: 10px;">Download as CSV</button>
+</div>
+<div id="chart-container">
+    <canvas id="barChart"></canvas>
+    <div id="chart-sidebar">
+        <h3>Legend</h3>
+        <ul id="legendList" style="list-style: none; padding: 0;"></ul>
+    </div>
+</div>
+
+<script>
+    const colors = [
+        "#4CAF50", "#FF5733", "#33C9FF", "#FFC300", "#D633FF", "#FF33B2",
+        "#33FF57", "#8D33FF", "#FF8D33", "#FF3333"
+    ]; // Predefined colors for customers
+
+    fetch('/billing-metrics')
+        .then(response => response.json())
+        .then(data => {
+            populateTable(data);
+            createBarGraph(data);
+        });
+
+    function populateTable(data) {
+        const tbody = document.querySelector("#dataTable tbody");
+        tbody.innerHTML = "";
+        data.forEach((item, index) => {
+            const row = document.createElement("tr");
+            row.innerHTML = `
+                <td>${index}</td>
+                <td>${item["Invoice Month"]}</td>
+                <td>${item["Customer"]}</td>
+                <td>${item["Dealer"]}</td>
+                <td>${item["Pages Translated"]}</td>
+                <td>${item["Cost"]}</td>
+            `;
+            tbody.appendChild(row);
+        });
+    }
+
+    function createBarGraph(data) {
+        const customers = [...new Set(data.map((item) => item.Customer))];
+        const pagesTranslated = customers.map((customer) =>
+            data
+                .filter((item) => item.Customer === customer)
+                .reduce((sum, item) => sum + item["Pages Translated"], 0)
+        );
+
+        const chartColors = customers.map((_, i) => colors[i % colors.length]);
+
+        const ctx = document.getElementById("barChart").getContext("2d");
+        new Chart(ctx, {
+            type: "bar",
+            data: {
+                labels: customers,
+                datasets: [
+                    {
+                        label: "Pages Translated",
+                        data: pagesTranslated,
+                        backgroundColor: chartColors,
+                    },
+                ],
+            },
+        });
+
+        populateLegend(customers, chartColors);
+    }
+
+    function populateLegend(customers, chartColors) {
+        const legendList = document.getElementById("legendList");
+        legendList.innerHTML = "";
+        customers.forEach((customer, index) => {
+            const legendItem = document.createElement("li");
+            legendItem.innerHTML = `
+                <span class="color-box" style="background-color: ${chartColors[index]}"></span>
+                ${customer}
+            `;
+            legendList.appendChild(legendItem);
+        });
+    }
+
+    document.getElementById("downloadCsv").addEventListener("click", () => {
+        fetch("/billing-metrics")
+            .then((response) => response.json())
+            .then((data) => {
+                const csvRows = [
+                    ["Index", "Customer", "Invoice Month", "Pages Translated", "Cost", "Dealer"],
+                    ...data.map((item, index) => [
+                        index,
+                        item.Customer,
+                        item["Invoice Month"],
+                        item["Pages Translated"],
+                        item.Cost,
+                        item.Dealer,
+                    ]),
+                ];
+                const csvContent =
+                    "data:text/csv;charset=utf-8," +
+                    csvRows.map((row) => row.join(",")).join("\n");
+                const encodedUri = encodeURI(csvContent);
+                const link = document.createElement("a");
+                link.setAttribute("href", encodedUri);
+                link.setAttribute("download", "billing_metrics.csv");
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            });
+    });
+</script>
+</body>
+</html>

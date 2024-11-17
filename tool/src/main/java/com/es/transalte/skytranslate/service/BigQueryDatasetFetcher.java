@@ -4,7 +4,6 @@ import com.google.auth.oauth2.ServiceAccountCredentials;
 import com.google.cloud.bigquery.*;
 
 import java.io.ByteArrayInputStream;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
@@ -50,11 +49,9 @@ public class BigQueryDatasetFetcher {
         logger.info("Running getBqDatasetName()");
         String datasetName = "No Datasets found.";
 
-        // List datasets in the project
         for (Dataset dataset : bigquery.listDatasets().iterateAll()) {
             logger.info("Dataset: " + dataset.getDatasetId().getDataset());
 
-            // Return the first dataset name found
             datasetName = dataset.getDatasetId().getDataset();
             break;
         }
@@ -79,19 +76,13 @@ public class BigQueryDatasetFetcher {
             );
 
             logger.info("Getting BigQuery Data with Query: " + query);
-
-            // Configure query job
             QueryJobConfiguration queryConfig = QueryJobConfiguration.newBuilder(query).build();
-
-            // Execute query
             TableResult result = null;
             try {
                 result = bigquery.query(queryConfig);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
-
-            // Process result
             for (FieldValueList row : result.iterateAll()) {
                 Map<String, Object> rowMap = new HashMap<>();
                 rowMap.put("Invoice Month", row.get("Invoice Month").getStringValue());
@@ -108,12 +99,6 @@ public class BigQueryDatasetFetcher {
         }
 
         return resultList;
-    }
-
-    public static void main(String[] args) {
-        BigQueryDatasetFetcher bigQueryDatasetFetcher = new BigQueryDatasetFetcher();
-        System.out.println(bigQueryDatasetFetcher.getBqData("tabs-super-admin." + bigQueryDatasetFetcher.getBqDatasetName() + ".gcp_billing_export_v1_"
-                + bigQueryDatasetFetcher.getBillingAccountName("billingAccounts/019127-211CFD-310FB5") ));
     }
 
     public String getBillingAccountName(String input) {
