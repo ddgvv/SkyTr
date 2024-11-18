@@ -2,7 +2,6 @@ package com.es.transalte.skytranslate.service;
 
 import com.google.auth.oauth2.ServiceAccountCredentials;
 import com.google.cloud.bigquery.*;
-
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -51,7 +50,6 @@ public class BigQueryDatasetFetcher {
 
         for (Dataset dataset : bigquery.listDatasets().iterateAll()) {
             logger.info("Dataset: " + dataset.getDatasetId().getDataset());
-
             datasetName = dataset.getDatasetId().getDataset();
             break;
         }

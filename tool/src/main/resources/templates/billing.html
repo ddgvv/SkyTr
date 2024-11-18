@@ -4,92 +4,202 @@
     <title>Billing Metrics</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
+        /* Global Styles */
         body {
-            font-family: Arial, sans-serif;
-            background-color: #1b2d3c;
-            color: #a0c5c9;
-            padding: 20px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            background-color: #15202b;
+            color: #e8f1f2;
         }
+
+        .container {
+            display: flex;
+        }
+
+        /* Side Panel */
+        .side-panel {
+            width: 15%;
+            background-color: #192734;
+            padding: 20px;
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+        }
+
+        .side-panel h2 {
+            color: #1da1f2;
+            margin-bottom: 20px;
+        }
+
+        .side-panel ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .side-panel ul li {
+            margin: 15px 0;
+        }
+
+        .side-panel ul li a {
+            text-decoration: none;
+            color: #e8f1f2;
+            transition: color 0.3s;
+        }
+
+        .side-panel ul li a:hover {
+            color: #1da1f2;
+        }
+
+        /* Content Area */
+        .content {
+            margin-left: 18%;
+            padding: 30px;
+            width: 80%;
+        }
+
+        h1 {
+            color: #1da1f2;
+        }
+
+        input#filterInput {
+            padding: 10px;
+            width: 300px;
+            margin-bottom: 15px;
+            border: none;
+            border-radius: 5px;
+        }
+
         table {
             width: 100%;
             border-collapse: collapse;
-            margin: 20px 0;
-            font-size: 18px;
+            margin-top: 20px;
         }
+
         table thead tr {
-            background-color: #333;
+            background-color: #1da1f2;
             color: white;
         }
+
         table tbody tr:nth-child(odd) {
-            background-color: #2d3e50;
+            background-color: #22303c;
         }
+
         table tbody tr:nth-child(even) {
-            background-color: #1b2d3c;
+            background-color: #15202b;
         }
+
         th, td {
-            padding: 12px;
-            text-align: left;
-        }
-        #chart-container {
-            margin: 30px 0;
-            display: flex;
-        }
-        #chart-sidebar {
-            margin-left: 20px;
             padding: 10px;
-            background-color: #233748;
-            border-radius: 8px;
+            text-align: left;
+            border-bottom: 1px solid #1da1f2;
         }
+
+        button#downloadCsv {
+            padding: 10px 20px;
+            background-color: #1da1f2;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button#downloadCsv:hover {
+            background-color: #0d74b3;
+        }
+
+        /* Chart Container */
+        #chart-container {
+            margin-top: 40px;
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        canvas {
+            max-width: 60%;
+        }
+
+        #chart-sidebar {
+            background-color: #192734;
+            padding: 15px;
+            border-radius: 8px;
+            flex: 1;
+            max-width: 30%;
+        }
+
+        #chart-sidebar h3 {
+            margin-bottom: 10px;
+            color: #1da1f2;
+        }
+
+        #legendList {
+            list-style: none;
+            padding: 0;
+        }
+
         .color-box {
             width: 15px;
             height: 15px;
             display: inline-block;
             margin-right: 8px;
         }
+
     </style>
 </head>
-<body style="width: 75%;">
-<h1>Billing Metrics</h1>
-<div>
-    <input
-            type="text"
-            id="filterInput"
-            placeholder="Filter data by customer"
-            style="padding: 8px; width: 300px; margin-bottom: 10px;"
-    />
-</div>
-<table id="dataTable" >
-    <thead>
-    <tr>
-        <th>Index</th>
-        <th>Invoice Month</th>
-        <th>Customer</th>
-        <th>Dealer</th>
-        <th>Pages Translated</th>
-        <th>Cost</th>
-    </tr>
-    </thead>
-    <tbody>
-    <!-- Data will be inserted dynamically -->
-    </tbody>
-</table>
-<div style="text-align: center; margin: 20px 0;">
-    <button id="downloadCsv" style="padding: 10px;">Download as CSV</button>
-</div>
-<div id="chart-container">
-    <canvas id="barChart"></canvas>
-    <div id="chart-sidebar">
-        <h3>Legend</h3>
-        <ul id="legendList" style="list-style: none; padding: 0;"></ul>
+<body>
+<div class="container">
+    <!-- Side Panel -->
+    <div class="side-panel">
+        <h2>TOSHIBA</h2>
+        <h4>Customer Management</h4>
+        <ul>
+            <li><a href="/SkyTranslate">Provisioning</a></li>
+            <li><a href="/billing-metrics-page">User Reports</a></li>
+        </ul>
+    </div>
+
+    <!-- Main Content -->
+    <div class="content">
+        <h1>Billing Metrics</h1>
+        <div>
+            <input
+                    type="text"
+                    id="filterInput"
+                    placeholder="Filter data by customer"
+            />
+        </div>
+        <table id="dataTable">
+            <thead>
+            <tr>
+                <th>Index</th>
+                <th>Invoice Month</th>
+                <th>Customer</th>
+                <th>Dealer</th>
+                <th>Pages Translated</th>
+                <th>Cost</th>
+            </tr>
+            </thead>
+            <tbody>
+            <!-- Dynamic Data -->
+            </tbody>
+        </table>
+        <div style="text-align: center; margin: 20px 0;">
+            <button id="downloadCsv">Download as CSV</button>
+        </div>
+        <div id="chart-container">
+            <canvas id="barChart"></canvas>
+            <div id="chart-sidebar">
+                <h3>Legend</h3>
+                <ul id="legendList"></ul>
+            </div>
+        </div>
     </div>
 </div>
 
 <script>
-    const colors = [
-        "#4CAF50", "#FF5733", "#33C9FF", "#FFC300", "#D633FF", "#FF33B2",
-        "#33FF57", "#8D33FF", "#FF8D33", "#FF3333"
-    ]; // Predefined colors for customers
-
+    // Fetch and populate data
     fetch('/billing-metrics')
         .then(response => response.json())
         .then(data => {
@@ -103,12 +213,12 @@
         data.forEach((item, index) => {
             const row = document.createElement("tr");
             row.innerHTML = `
-                <td>${index}</td>
+                <td>${index + 1}</td>
                 <td>${item["Invoice Month"]}</td>
-                <td>${item["Customer"]}</td>
-                <td>${item["Dealer"]}</td>
+                <td>${item.Customer}</td>
+                <td>${item.Dealer}</td>
                 <td>${item["Pages Translated"]}</td>
-                <td>${item["Cost"]}</td>
+                <td>${item.Cost}</td>
             `;
             tbody.appendChild(row);
         });
@@ -121,58 +231,45 @@
                 .filter((item) => item.Customer === customer)
                 .reduce((sum, item) => sum + item["Pages Translated"], 0)
         );
-
-        const chartColors = customers.map((_, i) => colors[i % colors.length]);
+        const colors = customers.map((_, i) => `hsl(${i * 50}, 70%, 50%)`);
 
         const ctx = document.getElementById("barChart").getContext("2d");
         new Chart(ctx, {
             type: "bar",
             data: {
                 labels: customers,
-                datasets: [
-                    {
-                        label: "Pages Translated",
-                        data: pagesTranslated,
-                        backgroundColor: chartColors,
-                    },
-                ],
+                datasets: [{
+                    label: "Pages Translated",
+                    data: pagesTranslated,
+                    backgroundColor: colors,
+                }],
             },
         });
 
-        populateLegend(customers, chartColors);
+        populateLegend(customers, colors);
     }
 
-    function populateLegend(customers, chartColors) {
+    function populateLegend(customers, colors) {
         const legendList = document.getElementById("legendList");
         legendList.innerHTML = "";
-        customers.forEach((customer, index) => {
-            const legendItem = document.createElement("li");
-            legendItem.innerHTML = `
-                <span class="color-box" style="background-color: ${chartColors[index]}"></span>
+        customers.forEach((customer, i) => {
+            const listItem = document.createElement("li");
+            listItem.innerHTML = `
+                <span class="color-box" style="background-color: ${colors[i]}"></span>
                 ${customer}
             `;
-            legendList.appendChild(legendItem);
+            legendList.appendChild(listItem);
         });
     }
 
     document.getElementById("downloadCsv").addEventListener("click", () => {
-        fetch("/billing-metrics")
-            .then((response) => response.json())
-            .then((data) => {
-                const csvRows = [
-                    ["Index", "Customer", "Invoice Month", "Pages Translated", "Cost", "Dealer"],
-                    ...data.map((item, index) => [
-                        index,
-                        item.Customer,
-                        item["Invoice Month"],
-                        item["Pages Translated"],
-                        item.Cost,
-                        item.Dealer,
-                    ]),
-                ];
-                const csvContent =
-                    "data:text/csv;charset=utf-8," +
-                    csvRows.map((row) => row.join(",")).join("\n");
+        fetch('/billing-metrics')
+            .then(response => response.json())
+            .then(data => {
+                const csvContent = "data:text/csv;charset=utf-8," +
+                    data.map((row, index) =>
+                        `${index + 1},${row["Invoice Month"]},${row.Customer},${row.Dealer},${row["Pages Translated"]},${row.Cost}`
+                    ).join("\n");
                 const encodedUri = encodeURI(csvContent);
                 const link = document.createElement("a");
                 link.setAttribute("href", encodedUri);

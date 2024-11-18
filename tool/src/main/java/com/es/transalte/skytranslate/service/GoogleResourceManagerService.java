@@ -240,7 +240,13 @@ public class GoogleResourceManagerService {
         for (int i = 0; i < length - 2; i++) {
             middleChars.append(ALPHANUMERIC_AND_DASH.charAt(random.nextInt(ALPHANUMERIC_AND_DASH.length())));
         }
-        char lastChar = LOWERCASE.charAt(random.nextInt(LOWERCASE.length() + 10)); // 26 letters + 10 digits
+        char lastChar;
+        int randomIndex = random.nextInt(LOWERCASE.length() + 10); // Generate random index for letters + digits
+        if (randomIndex < LOWERCASE.length()) {
+            lastChar = LOWERCASE.charAt(randomIndex); // Pick from lowercase letters
+        } else {
+            lastChar = Character.forDigit(randomIndex - LOWERCASE.length(), 10); // Pick from digits 0-9
+        }
         return firstChar + middleChars.toString() + lastChar;
     }
 

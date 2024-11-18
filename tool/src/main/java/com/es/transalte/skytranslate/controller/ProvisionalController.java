@@ -20,7 +20,7 @@ import java.nio.charset.StandardCharsets;
 @Controller
 public class ProvisionalController {
     final Logger logger = LoggerFactory.getLogger(ProvisionalController.class);
-    private GoogleResourceManagerService googleResourceManagerService;
+    private final GoogleResourceManagerService googleResourceManagerService;
 
     @Autowired public ProvisionalController(GoogleResourceManagerService googleResourceManagerService) {
         this.googleResourceManagerService = googleResourceManagerService;
