@@ -239,11 +239,41 @@
             data: {
                 labels: customers,
                 datasets: [{
-                    label: "Pages Translated",
                     data: pagesTranslated,
                     backgroundColor: colors,
                 }],
             },
+            options: {
+            plugins: {
+                title: {
+                    display: true,
+                    text: "Pages Translated by Customer", // Chart title
+                    font: { size: 16 },
+                },
+                legend: {
+                    display: false, // Hide legend as it is in the sidebar
+                },
+            },
+            scales: {
+                y: {
+                    title: {
+                        display: true,
+                        text: "Pages Translated", // Y-axis title
+                        font: { size: 14 },
+                    },
+                    ticks: {
+                        beginAtZero: true, // Start Y-axis from zero
+                    },
+                },
+                x: {
+                    title: {
+                        display: true,
+                        text: "Customers", // X-axis title (optional)
+                        font: { size: 14 },
+                    },
+                },
+            },
+        },
         });
 
         populateLegend(customers, colors);

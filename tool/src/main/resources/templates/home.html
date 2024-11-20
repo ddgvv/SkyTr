@@ -2,79 +2,116 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Elevate Sky Translate Key Management</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <style>
-        /* Container for side panel and main content */
-        .container {
-            display: flex;
-            height: 100vh; /* Full viewport height */
+        /* Global Styles */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 0;
-            padding: 0;
+            background-color: #15202b;
+            color: #e8f1f2;
         }
 
-        /* Side panel styles */
+        .container {
+            display: flex;
+        }
+
+        /* Side Panel */
         .side-panel {
-            width: 25%; /* Side panel takes 25% of the width */
-            background-color: #2c3e50; /* Dark blue background */
-            color: #ecf0f1; /* Light text color */
+            width: 15%;
+            background-color: #192734;
             padding: 20px;
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
         }
 
         .side-panel h2 {
             color: #1da1f2;
-            font-size: 1.5rem;
             margin-bottom: 20px;
         }
 
         .side-panel ul {
-            list-style-type: none;
+            list-style: none;
             padding: 0;
         }
 
         .side-panel ul li {
-            margin-bottom: 15px;
+            margin: 15px 0;
         }
 
         .side-panel ul li a {
-            color: #ecf0f1;
             text-decoration: none;
+            color: #e8f1f2;
+            transition: color 0.3s;
         }
 
         .side-panel ul li a:hover {
-            text-decoration: underline;
+            color: #1da1f2;
         }
+           form {
+       width: 80%;
+       padding: 20px;
+       border-radius: 10px;
+       background-color: #243a4f;
+       color: #a0c5c9;
+       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+   }
 
-        /* Main content area */
+   form button {
+       margin-top: 20px;
+   }
+
+
+        /* Content Area */
         .content {
-
-            width: 75%; /* Main content takes 75% of the width */
-            display: flex;
-            justify-content: center; /* Horizontally center the form */
-            align-items: center; /* Vertically center the form */
-            background-color: #1b2d3c; /* Match your design theme */
-            color: #a0c5c9; /* Text color matching theme */
+            margin-left: 28%;
+            padding: 30px;
+            width: 80%;
         }
 
-        form {
-            width: 60%; /* Form width */
-            padding: 20px;
-            border-radius: 10px;
-            background-color: #243a4f; /* Slightly different background color for the form */
-            color: #a0c5c9;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+        h1 {
+            color: #1da1f2;
         }
 
-        form button {
-            margin-top: 20px;
-        }
+        .input-label-wrapper {
+    display: flex;
+    justify-content: space-between; /* Align label on the left and SVG on the right */
+    align-items: center;           /* Vertically center the content */
+    margin-bottom: 5px;            /* Add some spacing below */
+}
 
-        form a#downloadButton {
-            margin-top: 10px;
-            display: none;
-        }
+.input-label-wrapper label {
+    flex-grow: 1;                  /* Allow the label to take up available space */
+    margin-right: 10px;            /* Add some space between the label and the SVG */
+    font-weight: bold;
+                text-align: left; /* Optional: Make the label bold */
+}
+
+.input-label-wrapper svg {
+    cursor: pointer;               /* Optional: Show a pointer cursor for the SVG */
+    color: #1da1f2;                /* Optional: Add color to the SVG icon */
+}
+         /* Align form fields and labels to the left */
+    .form-row .form-group {
+        text-align: left; /* Ensure the form-group content is aligned left */
+    }
+
+    .form-row .form-group select {
+        width: 100%;
+    }
 
     </style>
     <script>
+        let fileUrl = null; // Variable to store the Blob URL
+
         async function submitForm(event) {
             event.preventDefault(); // Prevent the default form submission
 
@@ -83,7 +120,7 @@
                 dealerName: document.getElementById("dealerName").value,
                 customerName: document.getElementById("customerName").value,
                 accountType: document.getElementById("accountType").value,
-                term: document.getElementById("term").value
+                term: document.getElementById("term").value,
             };
 
             try {
@@ -91,30 +128,22 @@
                 const response = await fetch('/submitForm', {
                     method: 'POST',
                     headers: {
-                        'Content-Type': 'application/json'
+                        'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify(formData)
+                    body: JSON.stringify(formData),
                 });
 
                 if (response.ok) {
                     // Extract file as a Blob
                     const blob = await response.blob();
 
-                    // Create a URL for the file
-                    const url = window.URL.createObjectURL(blob);
+                    // Create a URL for the file and store it globally
+                    fileUrl = window.URL.createObjectURL(blob);
+console.log(fileUrl);
+                    // Show the Download button
                     const downloadButton = document.getElementById("downloadButton");
                     downloadButton.style.display = "inline-block";
-
-                    // Create a temporary link element for downloading
-                    const a = document.createElement('a');
-                    a.href = url;
-                    a.download = 'response.json'; // Filename for the downloaded file
-                    document.body.appendChild(a);
-                    a.click();
-
-                    // Clean up
-                    a.remove();
-                    window.URL.revokeObjectURL(url);
+                    downloadButton.dataset.filename = `${formData.customerName}.json`;
                 } else {
                     alert("Error submitting form. Please try again.");
                 }
@@ -123,6 +152,29 @@
                 alert("An unexpected error occurred.");
             }
         }
+
+        function downloadFile() {
+        console.log(fileUrl);
+            if (!fileUrl) {
+                alert("No file available to download. Please submit the form first.");
+                return;
+            }
+
+            // Create a temporary link element for downloading
+            const a = document.createElement('a');
+            a.href = fileUrl;
+
+            a.download = downloadButton.dataset.filename || 'response.json';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+
+        }
+
+         // Enable Bootstrap tooltips
+        $(document).ready(function () {
+            $('[data-toggle="tooltip"]').tooltip();
+        });
     </script>
 </head>
 <body>
@@ -139,21 +191,36 @@
 
     <!-- Main Content -->
     <div class="content">
-        <form onsubmit="submitForm(event)" class="p-4 border rounded">
+
+        <form style="text-align: center; margin: 10px 0;" onsubmit="submitForm(event)" class="p-4 border rounded" >
             <h1 class="text-left mb-4">Elevate Sky Translate Key Management</h1>
-            <div class="form-row">
+            <div style="text-align: center;" class="form-row">
                 <div class="form-group col-md-6">
-                    <label for="dealerName">Dealer Name:</label>
+                    <div class="input-label-wrapper">
+                        <label style="text-align: left;" for="dealerName">Dealer Name:</label>
+                        <svg data-toggle="tooltip" data-placement="top" title="3-30 characters including letters, numbers, and hyphens." style="text-align: right;" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-question-circle" viewBox="0 0 16 16">
+                            <path d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14zm0 1A8 8 0 1 1 8 0a8 8 0 0 1 0 16z"/>
+                            <path d="M5.255 5.786a.237.237 0 0 0-.247.247c0 .105.024.17.08.246.213.282.505.488.855.488.548 0 .768-.343.768-.77 0-.382-.252-.653-.653-.653-.373 0-.624.204-.803.442zm2.71 6.918c0 .345-.305.548-.655.548-.35 0-.655-.203-.655-.548 0-.345.305-.548.655-.548.35 0 .655.203.655.548z"/>
+                        </svg>
+                    </div>
                     <input type="text" class="form-control" id="dealerName" required>
                 </div>
                 <div class="form-group col-md-6">
-                    <label for="customerName">Enter Customer Name:</label>
+                    <div class="input-label-wrapper">
+                        <label for="customerName">Enter Customer Name:</label>
+                        <svg data-toggle="tooltip" data-placement="top" title="6-30 characters including letters, numbers, and hyphens." style="text-align: right;" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-question-circle" viewBox="0 0 16 16">
+                            <path d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14zm0 1A8 8 0 1 1 8 0a8 8 0 0 1 0 16z"/>
+                            <path d="M5.255 5.786a.237.237 0 0 0-.247.247c0 .105.024.17.08.246.213.282.505.488.855.488.548 0 .768-.343.768-.77 0-.382-.252-.653-.653-.653-.373 0-.624.204-.803.442zm2.71 6.918c0 .345-.305.548-.655.548-.35 0-.655-.203-.655-.548 0-.345.305-.548.655-.548.35 0 .655.203.655.548z"/>
+                        </svg>
+                    </div>
                     <input type="text" class="form-control" id="customerName" required>
                 </div>
             </div>
             <div class="form-row">
                 <div class="form-group col-md-6">
-                    <label for="accountType">Account Type:</label>
+                    <div class="input-label-wrapper" >
+                        <label for="accountType">Account Type:</label>
+                    </div>
                     <select id="accountType" class="form-control" required>
                         <option value="" selected>Choose an option</option>
                         <option value="Enterprise">Enterprise: $3000 (25000 Pages)</option>
@@ -162,7 +229,9 @@
                     </select>
                 </div>
                 <div class="form-group col-md-6">
-                    <label for="term">Term:</label>
+                    <div class="input-label-wrapper" >
+                        <label for="term">Term:</label>
+                    </div>
                     <select id="term" class="form-control" required>
                         <option value="" selected>Choose an option</option>
                         <option value="6 Months">6 Months</option>
@@ -173,7 +242,9 @@
             </div>
             <button type="submit" class="btn btn-primary btn-block" style="width: 30%;">Submit</button>
         </form>
-        <a id="downloadButton" class="btn btn-secondary btn-block mt-3" style="width: 25%; display: none;">Download Generated Key</a>
+        <div style="text-align: left; margin: 10px 0;">
+            <a id="downloadButton" onclick="downloadFile()" class="btn btn-secondary btn-block mt-3" style="width: 35%; display: none;">Download Generated Key</a>
+        </div>
     </div>
 </div>
 </body>
