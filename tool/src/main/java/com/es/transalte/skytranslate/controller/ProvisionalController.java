@@ -35,7 +35,8 @@ public class ProvisionalController {
     @PostMapping("/submitForm")
     public ResponseEntity<ByteArrayResource> submitForm(@RequestBody FormData formData) {
         try {
-            String keyData = googleResourceManagerService.processFirstPage(formData.getDealerName(), formData.getCustomerName(), formData.getAccountType());
+            String keyData = googleResourceManagerService.processFirstPage(formData.getDealerName().toLowerCase(),
+                    formData.getCustomerName().toLowerCase(), formData.getAccountType());
             ByteArrayResource resource = new ByteArrayResource(keyData.getBytes(StandardCharsets.UTF_8));
             return ResponseEntity.ok()
                     .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=response.json")
