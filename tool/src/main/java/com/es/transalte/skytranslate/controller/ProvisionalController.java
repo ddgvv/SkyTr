@@ -43,6 +43,7 @@ public class ProvisionalController {
                     .contentType(MediaType.APPLICATION_JSON)
                     .body(resource);
         } catch (Exception e) {
+            //
             e.printStackTrace();
             return ResponseEntity.status(500).build();
         }
