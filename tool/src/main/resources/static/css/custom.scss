@@ -26,6 +26,18 @@
     font-weight: normal;
     font-style: normal;
 }
+@mixin placeholder($color: $input-color-placeholder) {
+    &::-moz-placeholder {
+        color: $color;
+        opacity: 1;
+    }
+    &:-ms-input-placeholder {
+        color: $color;
+    }
+    &::-webkit-input-placeholder {
+        color: $color;
+    }
+}
 body {
     font-family: "Whyte", sans-serif;
     background-color: #0f3e50;
@@ -130,6 +142,80 @@ body {
         padding: 0 140px;
         h1 {
             font-size: 42px;
+        }
+    }
+}
+
+.billingPage {
+    .filterSection {
+        .form-group {
+            margin-bottom: 24px;
+            &-label,
+            i {
+                color: #d6eaf1;
+            }
+            .form-control {
+                --bs-body-bg: #7e99a2;
+                --bs-border-color: #7e99a2;
+                box-shadow: none;
+                padding: 10px 12px;
+                --bs-body-color: #ffffff;
+                @include placeholder($color: #ffffff);
+            }
+        }
+    }
+    .datagrid {
+        border-radius: 12px;
+        overflow-y: auto;
+        max-height: 575px;
+        scrollbar-width: thin;
+        scrollbar-color: #5c8591;
+        .table > :not(caption) > * > * {
+            --bs-table-bg: #0f3e50;
+        }
+        table {
+            --bs-table-border-color: #5c8591;
+            --bs-table-color: #ffffff;
+            font-size: 16px;
+            border-radius: 12px;
+            thead {
+                tr {
+                    th {
+                        padding: 8px 8px;
+                        font-family: "Whyte-meduim";
+                        background-color: #466c79;
+                        color: #b7d6df;
+                        font-weight: normal;
+                        position: sticky;
+                        top: -1px;
+                    }
+                }
+            }
+            tbody {
+                tr {
+                    td {
+                        &:first-child {
+                            text-align: right;
+                            color: #b7d6df;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    .downloadCsv {
+        .btn {
+            --bs-btn-padding-y: 8px;
+            --bs-btn-padding-x: 20px;
+            &-outline-primary {
+                --bs-btn-color: #d6eaf1;
+                --bs-btn-border-color: #8bbec2;
+                --bs-btn-hover-color: #ffffff;
+                --bs-btn-hover-bg: #8bbec2;
+                --bs-btn-hover-border-color: #8bbec2;
+                --bs-btn-active-bg: #8bbec2;
+                --bs-btn-active-border-color: #8bbec2;
+            }
         }
     }
 }

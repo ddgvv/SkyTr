@@ -181,31 +181,42 @@
           </div>
           <div class="filterSection">
             <div class="form-group">
-              <label>Filter</label>
-              <input
-                type="text"
-                id="filterInput"
-                placeholder="Filter data by customer"
-              />
+              <label class="d-block form-group-label mb-1">Filter Data</label>
+              <input type="text" id="filterInput" class="form-control" />
             </div>
           </div>
-          <table id="dataTable">
-            <thead>
-              <tr>
-                <th>Index</th>
-                <th>Invoice Month</th>
-                <th>Customer</th>
-                <th>Dealer</th>
-                <th>Pages Translated</th>
-                <th>Cost</th>
-              </tr>
-            </thead>
-            <tbody>
-              <!-- Dynamic Data -->
-            </tbody>
-          </table>
-          <div style="text-align: center; margin: 20px 0">
-            <button id="downloadCsv">Download as CSV</button>
+          <div class="datagrid mb-3">
+            <table class="table table-bordered mb-0" id="dataTable">
+              <thead>
+                <tr>
+                  <th></th>
+                  <th>Invoice Month</th>
+                  <th>Customer</th>
+                  <th>Dealer</th>
+                  <th>Pages Translated</th>
+                  <th>Cost</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- Dynamic Data -->
+                <tr>
+                  <td colspan="6" class="text-center">
+                    <div class="spinner-border" role="status">
+                      <span class="visually-hidden">Loading...</span>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="downloadCsv">
+            <button
+              type="button"
+              id="downloadCsv"
+              class="btn btn-outline-primary"
+            >
+              Download Data as CSV
+            </button>
           </div>
           <div id="chart-container">
             <canvas id="barChart"></canvas>
