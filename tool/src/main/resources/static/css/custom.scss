@@ -206,7 +206,7 @@ body {
     .downloadCsv {
         .btn {
             --bs-btn-padding-y: 8px;
-            --bs-btn-padding-x: 20px;
+            --bs-btn-padding-x: 16px;
             &-outline-primary {
                 --bs-btn-color: #d6eaf1;
                 --bs-btn-border-color: #8bbec2;
@@ -215,6 +215,42 @@ body {
                 --bs-btn-hover-border-color: #8bbec2;
                 --bs-btn-active-bg: #8bbec2;
                 --bs-btn-active-border-color: #8bbec2;
+            }
+        }
+    }
+
+    .chartSection {
+        &__left {
+            flex: 1 1 auto;
+        }
+        &__right {
+            width: 220px;
+            flex: 0 0 auto;
+            margin-left: 30px;
+            h3 {
+                font-size: 18px;
+                color: #d6eaf1;
+            }
+            ul {
+                list-style-type: none;
+                padding: 0;
+                margin: 0;
+                display: flex;
+                flex-direction: column;
+                row-gap: 6px;
+                font-size: 14px;
+                color: #d6eaf1;
+                li {
+                    line-height: normal;
+                    display: flex;
+                    align-items: center;
+                }
+                .color-box {
+                    width: 15px;
+                    height: 15px;
+                    display: inline-block;
+                    margin-right: 8px;
+                }
             }
         }
     }
