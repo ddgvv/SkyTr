@@ -1,0 +1,135 @@
+/* Global Styles */
+
+@font-face {
+    font-family: "Whyte-meduim";
+    src: url("/fonts/Whyte-Medium.eot");
+    src:
+        local("Whyte Medium"),
+        local("Whyte-Medium"),
+        url("/fonts/Whyte-Medium.eot?#iefix") format("embedded-opentype"),
+        url("/fonts/Whyte-Medium.woff2") format("woff2"),
+        url("/fonts/Whyte-Medium.woff") format("woff"),
+        url("/fonts/Whyte-Medium.ttf") format("truetype");
+    font-weight: 500;
+    font-style: normal;
+}
+@font-face {
+    font-family: "Whyte";
+    src: url("/fonts/Whyte-Regular.eot");
+    src:
+        local("Whyte Regular"),
+        local("Whyte-Regular"),
+        url("/fonts/Whyte-Regular.eot?#iefix") format("embedded-opentype"),
+        url("/fonts/Whyte-Regular.woff2") format("woff2"),
+        url("/fonts/Whyte-Regular.woff") format("woff"),
+        url("/fonts/Whyte-Regular.ttf") format("truetype");
+    font-weight: normal;
+    font-style: normal;
+}
+body {
+    font-family: "Whyte", sans-serif;
+    background-color: #0f3e50;
+    color: #ffffff;
+}
+
+.wrapper {
+    padding-left: 320px;
+    &__sidepanel {
+        width: 320px;
+        background-color: #2b5565;
+        &__header {
+            margin-bottom: 36px;
+            img {
+                max-width: 146px;
+            }
+        }
+        h2 {
+            color: #d6eaf1;
+            font-size: 16px;
+            font-family: "Whyte-meduim";
+        }
+        .nav {
+            &-item {
+                a {
+                    text-decoration: none;
+                    color: #d6eaf1;
+                    display: block;
+                    padding: 6px 10px;
+                    border-radius: 10px;
+                    &.active {
+                        color: #ffffff;
+                        background-color: #5e7e89;
+                        font-family: "Whyte-meduim";
+                    }
+                }
+            }
+        }
+    }
+    &__content {
+        padding: 40px;
+    }
+}
+
+// pageheader
+.pageHeader {
+    margin-bottom: 30px;
+    h1 {
+        font-size: 42px;
+        font-family: "Whyte-meduim";
+        color: #8bbec2;
+        line-height: normal;
+    }
+}
+
+.homePage {
+    padding: 0 200px;
+    &__banner {
+        margin-bottom: 50px;
+    }
+    .btn {
+        --bs-btn-padding-y: 8px;
+        --bs-btn-padding-x: 20px;
+        &-outline-primary {
+            --bs-btn-color: #d6eaf1;
+            --bs-btn-border-color: #8bbec2;
+            --bs-btn-hover-color: #ffffff;
+            --bs-btn-hover-bg: #8bbec2;
+            --bs-btn-hover-border-color: #8bbec2;
+            --bs-btn-active-bg: #8bbec2;
+            --bs-btn-active-border-color: #8bbec2;
+        }
+    }
+    h1 {
+        font-size: 56px;
+        color: #8bbec2;
+        font-family: "Whyte-meduim";
+        margin-bottom: 30px;
+        line-height: normal;
+    }
+    &__form {
+        --bs-border-color: #8bbec2;
+        border-radius: 10px;
+        .row {
+            row-gap: 20px;
+        }
+        .form-group {
+            &-label,
+            i {
+                color: #d6eaf1;
+            }
+            .form-control {
+                --bs-body-bg: #7e99a2;
+                --bs-border-color: #7e99a2;
+                box-shadow: none;
+                padding: 10px 12px;
+                --bs-body-color: #ffffff;
+            }
+        }
+    }
+    @media (max-width: 1399px) {
+        padding: 0 140px;
+        h1 {
+            font-size: 42px;
+        }
+    }
+}

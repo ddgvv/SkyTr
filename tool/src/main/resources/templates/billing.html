@@ -1,11 +1,22 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<head>
+<html>
+  <head>
     <title>Billing Metrics</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css"
+    />
+    <link rel="stylesheet" href="/css/custom.min.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        /* Global Styles */
-        body {
+      /* body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 0;
             background-color: #15202b;
@@ -15,8 +26,6 @@
         .container {
             display: flex;
         }
-
-        /* Side Panel */
         .side-panel {
             width: 15%;
             background-color: #192734;
@@ -50,8 +59,6 @@
         .side-panel ul li a:hover {
             color: #1da1f2;
         }
-
-        /* Content Area */
         .content {
             margin-left: 18%;
             padding: 30px;
@@ -108,8 +115,6 @@
         button#downloadCsv:hover {
             background-color: #0d74b3;
         }
-
-        /* Chart Container */
         #chart-container {
             margin-top: 40px;
             display: flex;
@@ -144,75 +149,90 @@
             height: 15px;
             display: inline-block;
             margin-right: 8px;
-        }
-
+        } */
     </style>
-</head>
-<body>
-<div class="container">
-    <!-- Side Panel -->
-    <div class="side-panel">
-        <h2>TOSHIBA</h2>
-        <h4>Customer Management</h4>
-        <ul>
-            <li><a href="/SkyTranslate">Provisioning</a></li>
-            <li><a href="/billing-metrics-page">User Reports</a></li>
-        </ul>
-    </div>
-
-    <!-- Main Content -->
-    <div class="content">
-        <h1>Billing Metrics</h1>
-        <div>
-            <input
-                    type="text"
-                    id="filterInput"
-                    placeholder="Filter data by customer"
-            />
+  </head>
+  <body>
+    <div class="wrapper">
+      <aside class="wrapper__sidepanel position-fixed start-0 top-0 h-100 p-3">
+        <div class="wrapper__sidepanel__header">
+          <img
+            src="/images/Toshiba_white.png"
+            class="img-fluid"
+            alt="Toshiba"
+          />
         </div>
-        <table id="dataTable">
+        <h2>Customer Management</h2>
+        <nav>
+          <ul class="nav flex flex-column">
+            <li class="nav-item">
+              <a href="/SkyTranslate">Provisioning</a>
+            </li>
+            <li class="nav-item">
+              <a href="/billing-metrics-page" class="active">User Reports</a>
+            </li>
+          </ul>
+        </nav>
+      </aside>
+      <div class="wrapper__content">
+        <div class="billingPage">
+          <div class="pageHeader">
+            <h1>Billing Metrics</h1>
+          </div>
+          <div class="filterSection">
+            <div class="form-group">
+              <label>Filter</label>
+              <input
+                type="text"
+                id="filterInput"
+                placeholder="Filter data by customer"
+              />
+            </div>
+          </div>
+          <table id="dataTable">
             <thead>
-            <tr>
+              <tr>
                 <th>Index</th>
                 <th>Invoice Month</th>
                 <th>Customer</th>
                 <th>Dealer</th>
                 <th>Pages Translated</th>
                 <th>Cost</th>
-            </tr>
+              </tr>
             </thead>
             <tbody>
-            <!-- Dynamic Data -->
+              <!-- Dynamic Data -->
             </tbody>
-        </table>
-        <div style="text-align: center; margin: 20px 0;">
+          </table>
+          <div style="text-align: center; margin: 20px 0">
             <button id="downloadCsv">Download as CSV</button>
-        </div>
-        <div id="chart-container">
+          </div>
+          <div id="chart-container">
             <canvas id="barChart"></canvas>
             <div id="chart-sidebar">
-                <h3>Legend</h3>
-                <ul id="legendList"></ul>
+              <h3>Legend</h3>
+              <ul id="legendList"></ul>
             </div>
+          </div>
         </div>
+      </div>
     </div>
-</div>
 
-<script>
-    // Fetch and populate data
-    fetch('/billing-metrics')
-        .then(response => response.json())
-        .then(data => {
-            populateTable(data);
-            createBarGraph(data);
+    <script>
+      // Fetch and populate data
+      fetch("/billing-metrics")
+        .then((response) => response.json())
+        .then((data) => {
+          populateTable(data);
+          createBarGraph(data);
         });
 
-    function populateTable(data) {
+      function populateTable(data) {
         const tbody = document.querySelector("#dataTable tbody");
         tbody.innerHTML = "";
         data.forEach((item, index) => {
-            const row = document.createElement("tr");
-            row.innerHTML = `
+          const row = document.createElement("tr");
+          row.innerHTML = `
                 <td>${index + 1}</td>
                 <td>${item["Invoice Month"]}</td>
                 <td>${item.Customer}</td>
@@ -220,95 +240,103 @@
                 <td>${item["Pages Translated"]}</td>
                 <td>${item.Cost}</td>
             `;
-            tbody.appendChild(row);
+          tbody.appendChild(row);
         });
-    }
+      }
 
-    function createBarGraph(data) {
+      function createBarGraph(data) {
         const customers = [...new Set(data.map((item) => item.Customer))];
         const pagesTranslated = customers.map((customer) =>
-            data
-                .filter((item) => item.Customer === customer)
-                .reduce((sum, item) => sum + item["Pages Translated"], 0)
+          data
+            .filter((item) => item.Customer === customer)
+            .reduce((sum, item) => sum + item["Pages Translated"], 0)
         );
         const colors = customers.map((_, i) => `hsl(${i * 50}, 70%, 50%)`);
 
         const ctx = document.getElementById("barChart").getContext("2d");
         new Chart(ctx, {
-            type: "bar",
-            data: {
-                labels: customers,
-                datasets: [{
-                    data: pagesTranslated,
-                    backgroundColor: colors,
-                }],
-            },
-            options: {
+          type: "bar",
+          data: {
+            labels: customers,
+            datasets: [
+              {
+                data: pagesTranslated,
+                backgroundColor: colors,
+              },
+            ],
+          },
+          options: {
             plugins: {
-                title: {
-                    display: true,
-                    text: "Pages Translated by Customer", // Chart title
-                    font: { size: 16 },
-                },
-                legend: {
-                    display: false, // Hide legend as it is in the sidebar
-                },
+              title: {
+                display: true,
+                text: "Pages Translated by Customer", // Chart title
+                font: { size: 16 },
+              },
+              legend: {
+                display: false, // Hide legend as it is in the sidebar
+              },
             },
             scales: {
-                y: {
-                    title: {
-                        display: true,
-                        text: "Pages Translated", // Y-axis title
-                        font: { size: 14 },
-                    },
-                    ticks: {
-                        beginAtZero: true, // Start Y-axis from zero
-                    },
+              y: {
+                title: {
+                  display: true,
+                  text: "Pages Translated", // Y-axis title
+                  font: { size: 14 },
                 },
-                x: {
-                    title: {
-                        display: true,
-                        text: "Customers", // X-axis title (optional)
-                        font: { size: 14 },
-                    },
+                ticks: {
+                  beginAtZero: true, // Start Y-axis from zero
                 },
+              },
+              x: {
+                title: {
+                  display: true,
+                  text: "Customers", // X-axis title (optional)
+                  font: { size: 14 },
+                },
+              },
             },
-        },
+          },
         });
 
         populateLegend(customers, colors);
-    }
+      }
 
-    function populateLegend(customers, colors) {
+      function populateLegend(customers, colors) {
         const legendList = document.getElementById("legendList");
         legendList.innerHTML = "";
         customers.forEach((customer, i) => {
-            const listItem = document.createElement("li");
-            listItem.innerHTML = `
+          const listItem = document.createElement("li");
+          listItem.innerHTML = `
                 <span class="color-box" style="background-color: ${colors[i]}"></span>
                 ${customer}
             `;
-            legendList.appendChild(listItem);
+          legendList.appendChild(listItem);
         });
-    }
+      }
 
-    document.getElementById("downloadCsv").addEventListener("click", () => {
-        fetch('/billing-metrics')
-            .then(response => response.json())
-            .then(data => {
-                const csvContent = "data:text/csv;charset=utf-8," +
-                    data.map((row, index) =>
-                        `${index + 1},${row["Invoice Month"]},${row.Customer},${row.Dealer},${row["Pages Translated"]},${row.Cost}`
-                    ).join("\n");
-                const encodedUri = encodeURI(csvContent);
-                const link = document.createElement("a");
-                link.setAttribute("href", encodedUri);
-                link.setAttribute("download", "billing_metrics.csv");
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-            });
-    });
-</script>
-</body>
+      document.getElementById("downloadCsv").addEventListener("click", () => {
+        fetch("/billing-metrics")
+          .then((response) => response.json())
+          .then((data) => {
+            const csvContent =
+              "data:text/csv;charset=utf-8," +
+              data
+                .map(
+                  (row, index) =>
+                    `${index + 1},${row["Invoice Month"]},${row.Customer},${
+                      row.Dealer
+                    },${row["Pages Translated"]},${row.Cost}`
+                )
+                .join("\n");
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", "billing_metrics.csv");
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+          });
+      });
+    </script>
+  </body>
 </html>

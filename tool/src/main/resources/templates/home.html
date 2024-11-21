@@ -1,249 +1,225 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
+  <head>
     <title>Elevate Sky Translate Key Management</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css"
+    />
+    <link rel="stylesheet" href="/css/custom.min.css" />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <link rel="stylesheet" href="../static/css/custom.css" />
-    <style>
-        /* Global Styles */
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            background-color: #15202b;
-            color: #e8f1f2;
-        } .container {
-            display: flex;
-        }
 
-
-
-        /* Side Panel */
-        .side-panel {
-            width: 15%;
-            background-color: #192734;
-            padding: 20px;
-            height: 100vh;
-            position: fixed;
-            top: 0;
-            left: 0;
-        }
-
-        .side-panel h2 {
-            color: #1da1f2;
-            margin-bottom: 20px;
-        }
-
-        .side-panel ul {
-            list-style: none;
-            padding: 0;
-        }
-
-        .side-panel ul li {
-            margin: 15px 0;
-        }
-
-        .side-panel ul li a {
-            text-decoration: none;
-            color: #e8f1f2;
-            transition: color 0.3s;
-        }
-
-        .side-panel ul li a:hover {
-            color: #1da1f2;
-        }
-           form {
-       width: 80%;
-       padding: 20px;
-       border-radius: 10px;
-       background-color: #243a4f;
-       color: #a0c5c9;
-       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-   }
-
-   form button {
-       margin-top: 20px;
-   }
-
-
-        /* Content Area */
-        .content {
-            margin-left: 28%;
-            padding: 30px;
-            width: 80%;
-        }
-
-        h1 {
-            color: #1da1f2;
-        }
-
-        .input-label-wrapper {
-    display: flex;
-    justify-content: space-between; /* Align label on the left and SVG on the right */
-    align-items: center;           /* Vertically center the content */
-    margin-bottom: 5px;            /* Add some spacing below */
-}
-
-.input-label-wrapper label {
-    flex-grow: 1;                  /* Allow the label to take up available space */
-    margin-right: 10px;            /* Add some space between the label and the SVG */
-    font-weight: bold;
-                text-align: left; /* Optional: Make the label bold */
-}
-
-.input-label-wrapper svg {
-    cursor: pointer;               /* Optional: Show a pointer cursor for the SVG */
-    color: #1da1f2;                /* Optional: Add color to the SVG icon */
-}
-         /* Align form fields and labels to the left */
-    .form-row .form-group {
-        text-align: left; /* Ensure the form-group content is aligned left */
-    }
-
-    .form-row .form-group select {
-        width: 100%;
-    }
-
-    </style>
     <script>
-        let fileUrl = null; // Variable to store the Blob URL
+      let fileUrl = null; // Variable to store the Blob URL
 
-        async function submitForm(event) {
-            event.preventDefault(); // Prevent the default form submission
+      async function submitForm(event) {
+        event.preventDefault(); // Prevent the default form submission
 
-            // Collect form data
-            const formData = {
-                dealerName: document.getElementById("dealerName").value,
-                customerName: document.getElementById("customerName").value,
-                accountType: document.getElementById("accountType").value,
-                term: document.getElementById("term").value,
-            };
+        // Collect form data
+        const formData = {
+          dealerName: document.getElementById("dealerName").value,
+          customerName: document.getElementById("customerName").value,
+          accountType: document.getElementById("accountType").value,
+          term: document.getElementById("term").value,
+        };
 
-            try {
-                // Call the API using fetch
-                const response = await fetch('/submitForm', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(formData),
-                });
+        try {
+          // Call the API using fetch
+          const response = await fetch("/submitForm", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(formData),
+          });
 
-                if (response.ok) {
-                    // Extract file as a Blob
-                    const blob = await response.blob();
+          if (response.ok) {
+            // Extract file as a Blob
+            const blob = await response.blob();
 
-                    // Create a URL for the file and store it globally
-                    fileUrl = window.URL.createObjectURL(blob);
-console.log(fileUrl);
-                    // Show the Download button
-                    const downloadButton = document.getElementById("downloadButton");
-                    downloadButton.style.display = "inline-block";
-                    downloadButton.dataset.filename = `${formData.customerName}.json`;
-                } else {
-                    alert("Error submitting form. Please try again.");
-                }
-            } catch (error) {
-                console.error("Error:", error);
-                alert("An unexpected error occurred.");
-            }
+            // Create a URL for the file and store it globally
+            fileUrl = window.URL.createObjectURL(blob);
+            console.log(fileUrl);
+            // Show the Download button
+            const downloadButton = document.getElementById("downloadButton");
+            downloadButton.style.display = "inline-block";
+            downloadButton.dataset.filename = `${formData.customerName}.json`;
+          } else {
+            alert("Error submitting form. Please try again.");
+          }
+        } catch (error) {
+          console.error("Error:", error);
+          alert("An unexpected error occurred.");
         }
+      }
 
-        function downloadFile() {
+      function downloadFile() {
         console.log(fileUrl);
-            if (!fileUrl) {
-                alert("No file available to download. Please submit the form first.");
-                return;
-            }
-
-            // Create a temporary link element for downloading
-            const a = document.createElement('a');
-            a.href = fileUrl;
-
-            a.download = downloadButton.dataset.filename || 'response.json';
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-
+        if (!fileUrl) {
+          alert("No file available to download. Please submit the form first.");
+          return;
         }
 
-         // Enable Bootstrap tooltips
-        $(document).ready(function () {
-            $('[data-toggle="tooltip"]').tooltip();
-        });
-    </script>
-</head>
-<body>
-<div class="container">
-    <!-- Side Panel -->
-    <div class="side-panel">
-        <img height="20px" width="130px" src="/images/Toshiba_white.png" alt="Toshiba"/>
-        <h4>Customer Management</h4>
-        <ul>
-            <li><a href="/SkyTranslate">Provisioning</a></li>
-            <li><a href="/billing-metrics-page">User Reports</a></li>
-        </ul>
-    </div>
+        // Create a temporary link element for downloading
+        const a = document.createElement("a");
+        a.href = fileUrl;
 
-    <div class="content">
-        <img height="40%" width="80%" src="/images/AdobeStock_386898839.jpeg" alt="Toshiba"/>
-        <form style="text-align: center; margin: 10px 0;" onsubmit="submitForm(event)" class="p-4 border rounded" >
-            <h1 class="text-left mb-4">Elevate Sky Translate Key Management</h1>
-            <div style="text-align: center;" class="form-row">
-                <div class="form-group col-md-6">
-                    <div class="input-label-wrapper">
-                        <label style="text-align: left;" for="dealerName">Dealer Name:</label>
-                        <svg data-toggle="tooltip" data-placement="top" title="3-30 characters including letters, numbers, and hyphens." style="text-align: right;" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-question-circle" viewBox="0 0 16 16">
-                            <path d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14zm0 1A8 8 0 1 1 8 0a8 8 0 0 1 0 16z"/>
-                            <path d="M5.255 5.786a.237.237 0 0 0-.247.247c0 .105.024.17.08.246.213.282.505.488.855.488.548 0 .768-.343.768-.77 0-.382-.252-.653-.653-.653-.373 0-.624.204-.803.442zm2.71 6.918c0 .345-.305.548-.655.548-.35 0-.655-.203-.655-.548 0-.345.305-.548.655-.548.35 0 .655.203.655.548z"/>
-                        </svg>
+        a.download = downloadButton.dataset.filename || "response.json";
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+      }
+
+      // Enable Bootstrap tooltips
+      $(document).ready(function () {
+        $('[data-toggle="tooltip"]').tooltip();
+      });
+    </script>
+  </head>
+  <body>
+    <div class="wrapper">
+      <aside class="wrapper__sidepanel position-fixed start-0 top-0 h-100 p-3">
+        <div class="wrapper__sidepanel__header">
+          <img
+            src="/images/Toshiba_white.png"
+            class="img-fluid"
+            alt="Toshiba"
+          />
+        </div>
+        <h2>Customer Management</h2>
+        <nav>
+          <ul class="nav flex flex-column">
+            <li class="nav-item">
+              <a href="/SkyTranslate" class="active">Provisioning</a>
+            </li>
+            <li class="nav-item">
+              <a href="/billing-metrics-page">User Reports</a>
+            </li>
+          </ul>
+        </nav>
+      </aside>
+
+      <div class="wrapper__content">
+        <div class="homePage">
+          <div class="homePage__banner">
+            <img
+              src="/images/home-banner.jpg"
+              alt="Toshiba"
+              class="img-fluid"
+            />
+          </div>
+          <h1>Elevate Sky Translate Key Management</h1>
+          <div class="homePage__form p-4 border">
+            <form onsubmit="submitForm(event)">
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <div
+                      class="form-group-label-wrapper d-flex justify-content-between mb-1"
+                    >
+                      <label for="dealerName" class="form-group-label"
+                        >Dealer Name:</label
+                      >
+                      <i
+                        class="bi bi-question-circle"
+                        data-toggle="tooltip"
+                        data-placement="top"
+                        title="3-30 characters including letters, numbers, and hyphens."
+                      ></i>
                     </div>
-                    <input type="text" class="form-control" id="dealerName" required>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="dealerName"
+                      required
+                    />
+                  </div>
                 </div>
-                <div class="form-group col-md-6">
-                    <div class="input-label-wrapper">
-                        <label for="customerName">Enter Customer Name:</label>
-                        <svg data-toggle="tooltip" data-placement="top" title="6-30 characters including letters, numbers, and hyphens." style="text-align: right;" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-question-circle" viewBox="0 0 16 16">
-                            <path d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14zm0 1A8 8 0 1 1 8 0a8 8 0 0 1 0 16z"/>
-                            <path d="M5.255 5.786a.237.237 0 0 0-.247.247c0 .105.024.17.08.246.213.282.505.488.855.488.548 0 .768-.343.768-.77 0-.382-.252-.653-.653-.653-.373 0-.624.204-.803.442zm2.71 6.918c0 .345-.305.548-.655.548-.35 0-.655-.203-.655-.548 0-.345.305-.548.655-.548.35 0 .655.203.655.548z"/>
-                        </svg>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <div
+                      class="form-group-label-wrapper d-flex justify-content-between mb-1"
+                    >
+                      <label for="customerName" class="form-group-label"
+                        >Enter Customer Name:</label
+                      >
+                      <i
+                        class="bi bi-question-circle"
+                        data-toggle="tooltip"
+                        data-placement="top"
+                        title="6-30 characters including letters, numbers, and hyphens."
+                      ></i>
                     </div>
-                    <input type="text" class="form-control" id="customerName" required>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="customerName"
+                      required
+                    />
+                  </div>
                 </div>
-            </div>
-            <div class="form-row">
-                <div class="form-group col-md-6">
-                    <div class="input-label-wrapper" >
-                        <label for="accountType">Account Type:</label>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <div
+                      class="form-group-label-wrapper d-flex justify-content-between mb-1"
+                    >
+                      <label for="accountType" class="form-group-label"
+                        >Account Type:</label
+                      >
                     </div>
                     <select id="accountType" class="form-control" required>
-                        <option value="" selected>Choose an option</option>
-                        <option value="Enterprise">Enterprise: $3000 (25000 Pages)</option>
-                        <option value="Business">Business: $1500 (10000 Pages)</option>
-                        <option value="Basic">Basic: $1000 (5000 Pages)</option>
+                      <option value="" selected>Choose an option</option>
+                      <option value="Enterprise">
+                        Enterprise: $3000 (25000 Pages)
+                      </option>
+                      <option value="Business">
+                        Business: $1500 (10000 Pages)
+                      </option>
+                      <option value="Basic">Basic: $1000 (5000 Pages)</option>
                     </select>
+                  </div>
                 </div>
-                <div class="form-group col-md-6">
-                    <div class="input-label-wrapper" >
-                        <label for="term">Term:</label>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <div
+                      class="form-group-label-wrapper d-flex justify-content-between mb-1"
+                    >
+                      <label for="term" class="form-group-label">Term:</label>
                     </div>
                     <select id="term" class="form-control" required>
-                        <option value="" selected>Choose an option</option>
-                        <option value="6 Months">6 Months</option>
-                        <option value="1 Year">1 Year</option>
-                        <option value="3 Years">3 Years</option>
+                      <option value="" selected>Choose an option</option>
+                      <option value="6 Months">6 Months</option>
+                      <option value="1 Year">1 Year</option>
+                      <option value="3 Years">3 Years</option>
                     </select>
+                  </div>
                 </div>
-            </div>
-            <button type="submit" class="btn btn-primary btn-block" style="width: 30%;">Submit</button>
-        </form>
-        <div style="text-align: left; margin: 10px 0;">
-            <a id="downloadButton" onclick="downloadFile()" class="btn btn-secondary btn-block mt-3" style="width: 35%; display: none;">Download Generated Key</a>
+              </div>
+              <div class="mt-4">
+                <button type="submit" class="btn btn-outline-primary">
+                  Submit
+                </button>
+              </div>
+            </form>
+          </div>
+          <div class="mt-4">
+            <button
+              type="button"
+              id="downloadButton"
+              class="btn btn-outline-primary"
+              onclick="downloadFile()"
+            >
+              Download Generated Key
+            </button>
+          </div>
         </div>
+      </div>
     </div>
-</div>
-</body>
+  </body>
 </html>
