@@ -67,3 +67,88 @@ button {
     padding: 20px;
     background-color: #f4f4f4;
 }
+
+/* Side Panel */
+.side-panel {
+    width: 15%;
+    background-color: #192734;
+    padding: 20px;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+}
+
+.side-panel h2 {
+    color: #1da1f2;
+    margin-bottom: 20px;
+}
+
+.side-panel ul {
+    list-style: none;
+    padding: 0;
+}
+
+.side-panel ul li {
+    margin: 15px 0;
+}
+
+.side-panel ul li a {
+    text-decoration: none;
+    color: #e8f1f2;
+    transition: color 0.3s;
+}
+
+.side-panel ul li a:hover {
+    color: #1da1f2;
+}
+form {
+    width: 80%;
+    padding: 20px;
+    border-radius: 10px;
+    background-color: #243a4f;
+    color: #a0c5c9;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+form button {
+    margin-top: 20px;
+}
+
+/* Content Area */
+.content {
+    margin-left: 28%;
+    padding: 30px;
+    width: 80%;
+}
+
+h1 {
+    color: #1da1f2;
+}
+
+.input-label-wrapper {
+    display: flex;
+    justify-content: space-between; /* Align label on the left and SVG on the right */
+    align-items: center; /* Vertically center the content */
+    margin-bottom: 5px; /* Add some spacing below */
+}
+
+.input-label-wrapper label {
+    flex-grow: 1; /* Allow the label to take up available space */
+    margin-right: 10px; /* Add some space between the label and the SVG */
+    font-weight: bold;
+    text-align: left; /* Optional: Make the label bold */
+}
+
+.input-label-wrapper svg {
+    cursor: pointer; /* Optional: Show a pointer cursor for the SVG */
+    color: #1da1f2; /* Optional: Add color to the SVG icon */
+}
+/* Align form fields and labels to the left */
+.form-row .form-group {
+    text-align: left; /* Ensure the form-group content is aligned left */
+}
+
+.form-row .form-group select {
+    width: 100%;
+}
