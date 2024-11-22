@@ -1,196 +1,149 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>Billing Metrics</title>
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-    />
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css"
-    />
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="/js/ion.rangeSlider.min.js"></script>
-    <link
-      href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css"
-      rel="stylesheet"
-    />
-    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-    <link rel="stylesheet" href="/css/ion.rangeSlider.min.css" />
-    <link rel="stylesheet" href="/css/custom.min.css" />
-  </head>
-  <body>
-    <div class="wrapper">
-      <aside class="wrapper__sidepanel position-fixed start-0 top-0 h-100 p-3">
-        <div class="wrapper__sidepanel__header">
-          <img
-            src="/images/Toshiba_white.png"
-            class="img-fluid"
-            alt="Toshiba"
-          />
+
+<head>
+  <title>Billing Metrics</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" />
+  <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css" />
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="/js/ion.rangeSlider.min.js"></script>
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+  <link rel="stylesheet" href="/css/ion.rangeSlider.min.css" />
+  <link rel="stylesheet" href="/css/custom.min.css" />
+</head>
+
+<body>
+  <div class="wrapper">
+    <aside class="wrapper__sidepanel position-fixed start-0 top-0 h-100 p-3">
+      <div class="wrapper__sidepanel__header">
+        <img src="/images/Toshiba_white.png" class="img-fluid" alt="Toshiba" />
+      </div>
+      <h2>Customer Management</h2>
+      <nav>
+        <ul class="nav flex flex-column">
+          <li class="nav-item">
+            <a href="/SkyTranslate">Provisioning</a>
+          </li>
+          <li class="nav-item">
+            <a href="/billing-metrics-page" class="active">User Reports</a>
+          </li>
+        </ul>
+      </nav>
+    </aside>
+    <div class="wrapper__content">
+      <div class="billingPage">
+        <div class="pageHeader">
+          <h1>Billing Metrics</h1>
         </div>
-        <h2>Customer Management</h2>
-        <nav>
-          <ul class="nav flex flex-column">
-            <li class="nav-item">
-              <a href="/SkyTranslate">Provisioning</a>
-            </li>
-            <li class="nav-item">
-              <a href="/billing-metrics-page" class="active">User Reports</a>
-            </li>
-          </ul>
-        </nav>
-      </aside>
-      <div class="wrapper__content">
-        <div class="billingPage">
-          <div class="pageHeader">
-            <h1>Billing Metrics</h1>
+        <div class="filterSection">
+          <div class="form-group">
+            <label class="d-block form-group-label mb-1">Filter Data</label>
+            <select class="form-control" id="filterData" multiple="multiple">
+              <option>Dealer</option>
+              <option>Customer</option>
+              <option>Invoice Month</option>
+              <option>Pages Translated</option>
+              <option>Cost</option>
+            </select>
           </div>
-          <div class="filterSection">
-            <div class="form-group">
-              <label class="d-block form-group-label mb-1">Filter Data</label>
-              <select class="form-control" id="filterData" multiple="multiple">
-                <option>Dealer</option>
-                <option>Customer</option>
-                <option>Invoice Month</option>
-                <option>Pages Translated</option>
-                <option>Cost</option>
+          <div class="filterSection__inner" id="filterAdvance">
+            <div class="form-group" id="dealerField" style="display: none">
+              <label class="d-block form-group-label mb-1">Substring or regex in Dealer</label>
+              <input type="text" id="filterDealerInput" class="form-control" />
+            </div>
+            <div class="form-group" id="customerField" style="display: none">
+              <label class="d-block form-group-label mb-1">Substring or regex in Customer</label>
+              <input type="text" id="filterCustomerInput" class="form-control" />
+            </div>
+            <div class="form-group" id="invoiceMonthField" style="display: none">
+              <label class="d-block form-group-label mb-1">Invoice Month</label>
+              <select class="form-control" id="invoiceMonth" multiple="multiple">
               </select>
             </div>
-            <div class="filterSection__inner" id="filterAdvance">
-              <div class="form-group" id="dealerField" style="display: none">
-                <label class="d-block form-group-label mb-1"
-                  >Substring or regex in Dealer</label
-                >
-                <input type="text" id="filterDealerInput" class="form-control" />
-              </div>
-              <div class="form-group" id="customerField" style="display: none">
-                <label class="d-block form-group-label mb-1"
-                  >Substring or regex in Customer</label
-                >
-                <input type="text" id="filterCustomerInput" class="form-control" />
-              </div>
-              <div
-                class="form-group"
-                id="invoiceMonthField"
-                style="display: none"
-              >
-                <label class="d-block form-group-label mb-1"
-                  >Invoice Month</label
-                >
-                <select
-                  class="form-control"
-                  id="invoiceMonth"
-                  multiple="multiple"
-                >
-                  <option>08/2024</option>
-                  <option>09/2024</option>
-                  <option>10/2024</option>
-                  <option>11/2024</option>
-                </select>
-              </div>
-              <div
-                class="form-group"
-                id="pageTranslatedField"
-                style="display: none"
-              >
-                <label class="d-block form-group-label mb-1"
-                  >Page Translated</label
-                >
-                <input
-                  type="text"
-                  id="pageTranslatedSlider"
-                  class="js-range-slider"
-                  name="my_range"
-                  value=""
-                />
-              </div>
-              <div class="form-group" id="costField" style="display: none">
-                <label class="d-block form-group-label mb-1">Cost</label>
-                <input
-                  type="text"
-                  id="costTranslatedSlider"
-                  class="js-range-slider"
-                  name="my_range01"
-                  value=""
-                />
-              </div>
+            <div class="form-group" id="pageTranslatedField" style="display: none">
+              <label class="d-block form-group-label mb-1">Page Translated</label>
+              <input type="text" id="pageTranslatedSlider" class="js-range-slider" name="my_range" value="" />
+            </div>
+            <div class="form-group" id="costField" style="display: none">
+              <label class="d-block form-group-label mb-1">Cost</label>
+              <input type="text" id="costTranslatedSlider" class="js-range-slider" name="my_range01" value="" />
             </div>
           </div>
-          <div class="datagrid mb-3">
-            <table class="table table-bordered mb-0" id="dataTable">
-              <thead>
-                <tr>
-                  <th></th>
-                  <th>Invoice Month</th>
-                  <th>Customer</th>
-                  <th>Dealer</th>
-                  <th>Pages Translated</th>
-                  <th>Cost</th>
-                </tr>
-              </thead>
-              <tbody>
-                <!-- Dynamic Data -->
-                <tr>
-                  <td colspan="6" class="text-center">
-                    <div class="spinner-border" role="status">
-                      <span class="visually-hidden">Loading...</span>
-                    </div>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+        </div>
+        <div class="datagrid mb-3">
+          <table class="table table-bordered mb-0" id="dataTable">
+            <thead>
+              <tr>
+                <th></th>
+                <th>Invoice Month</th>
+                <th>Customer</th>
+                <th>Dealer</th>
+                <th>Pages Translated</th>
+                <th>Cost</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- Dynamic Data -->
+              <tr>
+                <td colspan="6" class="text-center">
+                  <div class="spinner-border" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="downloadCsv mb-4">
+          <button type="button" id="downloadCsv" class="btn btn-outline-primary">
+            Download Data as CSV
+          </button>
+        </div>
+        <div class="d-flex chartSection" id="chart-container">
+          <div class="chartSection__left">
+            <canvas id="barChart"></canvas>
           </div>
-          <div class="downloadCsv mb-4">
-            <button
-              type="button"
-              id="downloadCsv"
-              class="btn btn-outline-primary"
-            >
-              Download Data as CSV
-            </button>
-          </div>
-          <div class="d-flex chartSection" id="chart-container">
-            <div class="chartSection__left">
-              <canvas id="barChart"></canvas>
-            </div>
-            <div id="chart-sidebar" class="chartSection__right">
-              <h3>Customer</h3>
-              <ul id="legendList"></ul>
-            </div>
+          <div id="chart-sidebar" class="chartSection__right">
+            <h3>Customer</h3>
+            <ul id="legendList"></ul>
           </div>
         </div>
       </div>
     </div>
+  </div>
 
-    <script>
-      let billingPageData; 
-      let selectedDealerInput;
-      let selectedCustomerInput;
-      let pageTranslatedFrom = null;
-      let pageTranslatedTo = null;
-      let costFrom = null;
-      let costTo = null;
+  <script>
+    let billingPageData;
+    let selectedDealerInput = null;
+    let selectedCustomerInput = null;
+    let pageTranslatedFrom = null;
+    let pageTranslatedTo = null;
+    let costFrom = null;
+    let costTo = null;
+    let selectedInvoiceMonths = null;
+    let barChartInstance; // Global variable to store the chart instance
 
-      // Fetch and populate data
-      fetch("/billing-metrics")
-        .then((response) => response.json())
-        .then((data) => {
-          billingPageData = data;
-          populateTable(data);
-          createBarGraph(data);
-        });
+    // Fetch and populate data
+    fetch("/billing-metrics")
+      .then((response) => response.json())
+      .then((data) => {
+        billingPageData = data;
+        populateTable(data);
+        createBarGraph(data);
+      });
 
-      function populateTable(data) {
-        const tbody = document.querySelector("#dataTable tbody");
-        tbody.innerHTML = "";
-        data.forEach((item, index) => {
-          const row = document.createElement("tr");
-          row.innerHTML = `
+
+    function populateTable(data) {
+      const tbody = document.querySelector("#dataTable tbody");
+      tbody.innerHTML = "";
+      data.forEach((item, index) => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
                 <td>${index + 1}</td>
                 <td>${item["Invoice Month"]}</td>
                 <td>${item.Customer}</td>
@@ -198,280 +151,319 @@
                 <td>${item["Pages Translated"]}</td>
                 <td>${item.Cost}</td>
             `;
-          tbody.appendChild(row);
-        });
+        tbody.appendChild(row);
+      });
+    }
+
+    function createBarGraph(data) {
+      const customers = [...new Set(data.map((item) => item.Customer))];
+      const pagesTranslated = customers.map((customer) =>
+        data
+          .filter((item) => item.Customer === customer)
+          .reduce((sum, item) => sum + item["Pages Translated"], 0)
+      );
+      const colors = customers.map((_, i) => `hsl(${i * 50}, 70%, 50%)`);
+
+      const ctx = document.getElementById("barChart").getContext("2d");
+
+      // Destroy the existing chart instance if it exists
+      if (barChartInstance) {
+        barChartInstance.destroy();
       }
 
-      let barChartInstance; // Global variable to store the chart instance
-
-function createBarGraph(data) {
-  const customers = [...new Set(data.map((item) => item.Customer))];
-  const pagesTranslated = customers.map((customer) =>
-    data
-      .filter((item) => item.Customer === customer)
-      .reduce((sum, item) => sum + item["Pages Translated"], 0)
-  );
-  const colors = customers.map((_, i) => `hsl(${i * 50}, 70%, 50%)`);
-
-  const ctx = document.getElementById("barChart").getContext("2d");
-
-  // Destroy the existing chart instance if it exists
-  if (barChartInstance) {
-    barChartInstance.destroy();
-  }
-
-  // Create a new chart instance
-  barChartInstance = new Chart(ctx, {
-    type: "bar",
-    data: {
-      labels: customers,
-      datasets: [
-        {
-          data: pagesTranslated,
-          backgroundColor: colors,
-          color: "#d6eaf1",
+      // Create a new chart instance
+      barChartInstance = new Chart(ctx, {
+        type: "bar",
+        data: {
+          labels: customers,
+          datasets: [
+            {
+              data: pagesTranslated,
+              backgroundColor: colors,
+              color: "#d6eaf1",
+            },
+          ],
         },
-      ],
-    },
-    options: {
-      plugins: {
-        datalabels: {
-          color: "#d6eaf1",
-          font: {
-            weight: "normal",
-            size: 14,
+        options: {
+          plugins: {
+            datalabels: {
+              color: "#d6eaf1",
+              font: {
+                weight: "normal",
+                size: 14,
+              },
+            },
+            title: {
+              display: false,
+              text: "Pages Translated by Customer", // Chart title
+              font: { size: 16 },
+              color: "#d6eaf1",
+            },
+            legend: {
+              display: false, // Hide legend as it is in the sidebar
+            },
+          },
+          scales: {
+            y: {
+              title: {
+                display: true,
+                text: "Pages Translated", // Y-axis title
+                font: { size: 14 },
+                color: "#d6eaf1",
+              },
+              ticks: {
+                beginAtZero: true, // Start Y-axis from zero
+                color: "#d6eaf1",
+                font: { size: 12 },
+              },
+            },
+            x: {
+              title: {
+                display: true,
+                text: "Customers", // X-axis title (optional)
+                font: { size: 14 },
+                color: "#d6eaf1",
+              },
+              ticks: {
+                color: "#d6eaf1",
+                font: { size: 12 },
+              },
+            },
           },
         },
-        title: {
-          display: false,
-          text: "Pages Translated by Customer", // Chart title
-          font: { size: 16 },
-          color: "#d6eaf1",
-        },
-        legend: {
-          display: false, // Hide legend as it is in the sidebar
-        },
-      },
-      scales: {
-        y: {
-          title: {
-            display: true,
-            text: "Pages Translated", // Y-axis title
-            font: { size: 14 },
-            color: "#d6eaf1",
-          },
-          ticks: {
-            beginAtZero: true, // Start Y-axis from zero
-            color: "#d6eaf1",
-            font: { size: 12 },
-          },
-        },
-        x: {
-          title: {
-            display: true,
-            text: "Customers", // X-axis title (optional)
-            font: { size: 14 },
-            color: "#d6eaf1",
-          },
-          ticks: {
-            color: "#d6eaf1",
-            font: { size: 12 },
-          },
-        },
-      },
-    },
-  });
+      });
 
-  populateLegend(customers, colors);
-}
+      populateLegend(customers, colors);
+    }
 
-
-      function populateLegend(customers, colors) {
-        const legendList = document.getElementById("legendList");
-        legendList.innerHTML = "";
-        customers.forEach((customer, i) => {
-          const listItem = document.createElement("li");
-          listItem.innerHTML = `
+    function populateLegend(customers, colors) {
+      const legendList = document.getElementById("legendList");
+      legendList.innerHTML = "";
+      customers.forEach((customer, i) => {
+        const listItem = document.createElement("li");
+        listItem.innerHTML = `
                 <span class="color-box" style="background-color: ${colors[i]}"></span>
                 ${customer}
             `;
-          legendList.appendChild(listItem);
+        legendList.appendChild(listItem);
+      });
+    }
+
+    document.getElementById("downloadCsv").addEventListener("click", () => {
+      fetch("/billing-metrics")
+        .then((response) => response.json())
+        .then((data) => {
+          const csvContent =
+            "data:text/csv;charset=utf-8," +
+            data
+              .map(
+                (row, index) =>
+                  `${index + 1},${row["Invoice Month"]},${row.Customer},${row.Dealer
+                  },${row["Pages Translated"]},${row.Cost}`
+              )
+              .join("\n");
+          const encodedUri = encodeURI(csvContent);
+          const link = document.createElement("a");
+          link.setAttribute("href", encodedUri);
+          link.setAttribute("download", "billing_metrics.csv");
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
         });
+    });
+
+    $(document).ready(function () {
+      // Initialize Select2 for the main filter dropdown
+      $("#filterData").select2({
+        tags: true,
+        placeholder: "Choose an option",
+      });
+
+      $("#filterDealerInput").on("change", function () {
+        selectedDealerInput = $(this).val();
+        updateDataBasedOnFilters();
+      });
+
+      $("#filterCustomerInput").on("change", function () {
+        selectedCustomerInput = $(this).val();
+        updateDataBasedOnFilters();
+      });
+
+      $("#pageTranslatedSlider").on("change", function () {
+        let my_range = $("#pageTranslatedSlider").data("ionRangeSlider");
+        pageTranslatedFrom = my_range.result.from;
+        pageTranslatedTo = my_range.result.to;
+        updateDataBasedOnFilters();
+      });
+
+      $("#costTranslatedSlider").on("change", function () {
+        let my_range = $("#costTranslatedSlider").data("ionRangeSlider");
+        costFrom = my_range.result.from;
+        costTo = my_range.result.to;
+        updateDataBasedOnFilters();
+      });
+
+      $("#invoiceMonth").on("change", function () {
+        selectedInvoiceMonths = $("#invoiceMonth")
+          .select2("data")
+          .map((item) => item.text);
+        updateDataBasedOnFilters();
+      });
+
+      function updateDataBasedOnFilters() {
+        let filteredData = billingPageData;
+        if (selectedCustomerInput && selectedCustomerInput != "") {
+          filteredData = billingPageData.filter(
+            (record) =>
+              record.Customer.toString().search(selectedCustomerInput) >= 0
+          );
+        }
+        if (selectedDealerInput && selectedDealerInput != "") {
+          filteredData = filteredData.filter(
+            (record) => record.Dealer.toString().search(selectedDealerInput) >= 0
+          );
+        }
+
+        if (pageTranslatedFrom != null)
+          filteredData = filteredData.filter(
+            (item) => item["Pages Translated"] >= pageTranslatedFrom
+          );
+        if (pageTranslatedTo != null)
+          filteredData = filteredData.filter(
+            (item) => item["Pages Translated"] <= pageTranslatedTo
+          );
+
+        if (costFrom != null)
+          filteredData = filteredData.filter((item) => item.Cost >= costFrom);
+        if (costTo != null)
+          filteredData = filteredData.filter((item) => item.Cost <= costTo);
+
+        if (selectedInvoiceMonths != null)
+          filteredData = filteredData.filter((item) =>
+            selectedInvoiceMonths.includes(item["Invoice Month"])
+          );
+
+        populateTable(filteredData);
+        createBarGraph(filteredData);
       }
 
-      document.getElementById("downloadCsv").addEventListener("click", () => {
-        fetch("/billing-metrics")
-          .then((response) => response.json())
-          .then((data) => {
-            const csvContent =
-              "data:text/csv;charset=utf-8," +
-              data
-                .map(
-                  (row, index) =>
-                    `${index + 1},${row["Invoice Month"]},${row.Customer},${
-                      row.Dealer
-                    },${row["Pages Translated"]},${row.Cost}`
-                )
-                .join("\n");
-            const encodedUri = encodeURI(csvContent);
-            const link = document.createElement("a");
-            link.setAttribute("href", encodedUri);
-            link.setAttribute("download", "billing_metrics.csv");
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
+      // Show/hide fields and trigger select2 for Invoice Month
+      $("#filterData").on("change", function () {
+        const selectedOptions = $(this).val(); // Get selected options as an array
+        // Toggle visibility for each field
+        toggleField(selectedOptions, "Dealer", "#dealerField");
+        toggleField(selectedOptions, "Customer", "#customerField");
+        toggleField(selectedOptions, "Invoice Month", "#invoiceMonthField");
+        toggleField(selectedOptions, "Pages Translated", "#pageTranslatedField");
+        toggleField(selectedOptions, "Cost", "#costField");
+
+        // Initialize Select2 for Invoice Month dropdown if visible
+        if (selectedOptions && selectedOptions.includes("Invoice Month")) {
+          let invoiceMonths = [
+            ...new Set(billingPageData.map((item) => item["Invoice Month"])),
+          ];
+          $("#invoiceMonth").select2({
+            tags: true,
+            placeholder: "Select Invoice Month",
+            data: invoiceMonths,
           });
+          $("#invoiceMonth").val(invoiceMonths).trigger("change");
+        }
       });
 
-      $(document).ready(function () {
-        // Initialize Select2 for the main filter dropdown
-        $("#filterData").select2({
-          tags: true,
-          placeholder: "Choose an option",
-        });
-
-        $("#filterDealerInput").on("change", function () {
-          selectedDealerInput = $(this).val();
-          updateDataBasedOnFilters();
-        });
-
-        $("#filterCustomerInput").on("change", function () {
-          selectedCustomerInput = $(this).val();
-          updateDataBasedOnFilters();
-        });
-
-        $("#pageTranslatedSlider").on("change", function () {
-          let my_range = $("#pageTranslatedSlider").data("ionRangeSlider");
-          pageTranslatedFrom = my_range.result.from;
-          pageTranslatedTo = my_range.result.to;
-          updateDataBasedOnFilters();
-        });        
-
-        $("#costTranslatedSlider").on("change", function () {
-          let my_range = $("#costTranslatedSlider").data("ionRangeSlider");
-          costFrom = my_range.result.from;
-          costTo = my_range.result.to;
-          updateDataBasedOnFilters();
-        });        
-
-        function updateDataBasedOnFilters() {
-          let filteredData = billingPageData;;
-
-          if(selectedCustomerInput && selectedDealerInput && selectedCustomerInput != "" && selectedDealerInput != "") {
-            console.log(selectedDealerInput + "option 1" + selectedCustomerInput);
-            filteredData = billingPageData.filter(record => record.Customer.toString().startsWith(selectedCustomerInput) 
-                        || record.Dealer.toString().startsWith(selectedDealerInput));
-          } else if (selectedCustomerInput && selectedCustomerInput != "") {
-            console.log("option 2" + selectedCustomerInput);
-            filteredData = billingPageData.filter(record => record.Customer.toString().startsWith(selectedCustomerInput));
-          }else if (selectedDealerInput && selectedDealerInput != "") {
-            console.log("option 3" + selectedDealerInput);
-            filteredData = billingPageData.filter(record => record.Dealer.toString().startsWith(selectedDealerInput));
+      function toggleField(selectedOptions, optionValue, fieldId) {
+        if (selectedOptions && selectedOptions.includes(optionValue)) {
+          $(fieldId).show();
+        } else {
+          $(fieldId).hide();
+          if (optionValue == "Dealer") {
+            selectedDealerInput = null;
+            // Change the value of the input field
+            $("#filterDealerInput").val("");
           }
-
-          if (pageTranslatedFrom != null) filteredData = filteredData.filter(item => item["Pages Translated"] >= pageTranslatedFrom );
-          if (pageTranslatedTo != null) filteredData = filteredData.filter(item => item["Pages Translated"] <= pageTranslatedTo );
-
-          if (costFrom != null) filteredData = filteredData.filter(item => item.Cost >= costFrom );
-          if (costTo != null) filteredData = filteredData.filter(item => item.Cost <= costTo );
-
-          populateTable(filteredData);
-          createBarGraph(filteredData);
+          if (optionValue == "Customer") {
+            selectedCustomerInput = null;            
+            $("#filterCustomerInput").val("");
+          }
+          if (optionValue == "Pages Translated") {
+            pageTranslatedFrom = null;
+            pageTranslatedTo = null;
+          }
+          if (optionValue == "Cost") {
+            costFrom = null;
+            costTo = null;
+          }
+          if ((optionValue = "Invoice Month")) {
+            selectedInvoiceMonths = null;
+          }
+          updateDataBasedOnFilters();
         }
 
-        // Show/hide fields and trigger select2 for Invoice Month
-        $("#filterData").on("change", function () {
-          const selectedOptions = $(this).val(); // Get selected options as an array
-          console.log(selectedOptions);
-          // Toggle visibility for each field
-          toggleField(selectedOptions, "Dealer", "#dealerField");
-          toggleField(selectedOptions, "Customer", "#customerField");
-          toggleField(selectedOptions, "Invoice Month", "#invoiceMonthField");
-          toggleField(
-            selectedOptions,
-            "Pages Translated",
-            "#pageTranslatedField"
-          );
-          toggleField(selectedOptions, "Cost", "#costField");
+        if (optionValue == "Pages Translated") {
+            const minMaxPages = billingPageData.reduce(
+              (acc, curr) => {
+                return {
+                  min: Math.min(acc.min, curr["Pages Translated"]),
+                  max: Math.max(acc.max, curr["Pages Translated"]),
+                };
+              },
+              { min: Infinity, max: -Infinity }
+            );
 
-          // Initialize Select2 for Invoice Month dropdown if visible
-          if (selectedOptions && selectedOptions.includes("Invoice Month")) {
-            $("#invoiceMonth").select2({
-              tags: true,
-              placeholder: "Select Invoice Month",
+            $("#pageTranslatedSlider").ionRangeSlider({
+              type: "double",
+              skin: "round",
+              grid: true,
+              step: 0.1,
+              min: minMaxPages.min,
+              max: minMaxPages.max,
+              from: minMaxPages.min,
+              to: minMaxPages.max,
+              prefix: "",
+            });
+            var slider = $("#pageTranslatedSlider").data("ionRangeSlider");
+            // Update the slider values
+            slider.update({
+              from: minMaxPages.min,
+              to: minMaxPages.max,
             });
           }
-        });
 
-        function toggleField(selectedOptions, optionValue, fieldId) {
-          if (selectedOptions && selectedOptions.includes(optionValue)) {
-            $(fieldId).show();
-            if(optionValue == "Pages Translated") {
-              const minMaxPages = billingPageData.reduce(
-                (acc, curr) => {
-                  return {
-                    min: Math.min(acc.min, curr["Pages Translated"]),
-                    max: Math.max(acc.max, curr["Pages Translated"]),
-                  };
-                },
-                { min: Infinity, max: -Infinity }
-              );
+          if (optionValue == "Cost") {
+            const minMaxPages = billingPageData.reduce(
+              (acc, curr) => {
+                return {
+                  min: Math.min(acc.min, curr.Cost),
+                  max: Math.max(acc.max, curr.Cost),
+                };
+              },
+              { min: Infinity, max: -Infinity }
+            );
 
-              console.log(minMaxPages);
-              $("#pageTranslatedSlider").ionRangeSlider({
-                type: "double",
-                skin: "round",
-                grid: true,
-                step: 0.1,
-                min: minMaxPages.min,
-                max: minMaxPages.max,
-                from: minMaxPages.min,
-                to: minMaxPages.max,
-                prefix: "",
-              });
+            $("#costTranslatedSlider").ionRangeSlider({
+              type: "double",
+              skin: "round",
+              grid: true,
+              step: 0.01,
+              min: minMaxPages.min,
+              max: minMaxPages.max,
+              from: minMaxPages.min,
+              to: minMaxPages.max,
+              prefix: "",
+            });
+            var slider = $("#costTranslatedSlider").data("ionRangeSlider");
+            // Update the slider values
+            slider.update({
+              from: minMaxPages.min,
+              to: minMaxPages.max,
+            });
 
-            }
-            if(optionValue == "Cost") {
-              const minMaxPages = billingPageData.reduce(
-                (acc, curr) => {
-                  return {
-                    min: Math.min(acc.min, curr.Cost),
-                    max: Math.max(acc.max, curr.Cost),
-                  };
-                },
-                { min: Infinity, max: -Infinity }
-              );
-
-              $("#costTranslatedSlider").ionRangeSlider({
-                type: "double",
-                skin: "round",
-                grid: true,
-                step: 0.01,
-                min: minMaxPages.min,
-                max: minMaxPages.max,
-                from: minMaxPages.min,
-                to: minMaxPages.max,
-                prefix: "",
-              });
-
-            }
-          } else {
-            $(fieldId).hide();
-            console.log(optionValue);
-            if(optionValue == "Dealer") selectedDealerInput = "";
-            if(optionValue == "Customer") selectedCustomerInput = "";
-            if(optionValue == "Pages Translated") {
-              pageTranslatedFrom = null;
-              pageTranslatedTo = null;
-            }
-            if(optionValue == "Cost") {
-              costFrom = null;
-              costTo = null;
-            }
-            updateDataBasedOnFilters();
           }
-        }
-      });
-    </script>
-  </body>
+
+      }
+    });
+
+  </script>
+</body>
+
 </html>
