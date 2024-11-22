@@ -40,8 +40,8 @@ public class ApplicationConfig {
     }
 
     @Bean
-    public BillingService billingService(JsonLoader jsonLoader, CredentialsProvider credentialsProvider) {
-        return new BillingService(jsonLoader, credentialsProvider);
+    public BillingService billingService(CredentialsProvider credentialsProvider) {
+        return new BillingService(credentialsProvider);
     }
 
     @Bean

@@ -1,9 +1,6 @@
 package com.es.transalte.skytranslate.service;
 
 import com.google.api.gax.core.CredentialsProvider;
-import com.google.api.gax.core.FixedCredentialsProvider;
-import com.google.auth.Credentials;
-import com.google.auth.oauth2.ServiceAccountCredentials;
 import com.google.cloud.billing.budgets.v1.*;
 import com.google.cloud.billing.v1.*;
 import com.google.type.Money;
@@ -11,22 +8,20 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
 
 @Service
 public class BillingService {
 
     private final CredentialsProvider credentialsProvider;
     private static final Logger logger = LoggerFactory.getLogger(BillingService.class);
-    private final InputStream credInputStream;
-
-    public BillingService(JsonLoader jsonLoader, CredentialsProvider credentialsProvider) {
+    private final CloudBillingSettings billingSettings;
+    public BillingService(CredentialsProvider credentialsProvider) {
         this.credentialsProvider = credentialsProvider;
         try {
-            credInputStream = new ByteArrayInputStream(jsonLoader.loadJson().getBytes(StandardCharsets.UTF_8));
+            billingSettings = CloudBillingSettings.newBuilder()
+                    .setCredentialsProvider(credentialsProvider)
+                    .build();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -35,10 +30,6 @@ public class BillingService {
     public String getBillingAccount() throws IOException {
         logger.info("Running getBillingAccount function ");
 
-            Credentials credentials = ServiceAccountCredentials.fromStream(credInputStream);
-            CloudBillingSettings billingSettings = CloudBillingSettings.newBuilder()
-                    .setCredentialsProvider(FixedCredentialsProvider.create(credentials))
-                    .build();
 
             try (CloudBillingClient client = CloudBillingClient.create(billingSettings)) {
                 ListBillingAccountsRequest request = ListBillingAccountsRequest.newBuilder().build();
