@@ -1,7 +1,7 @@
 package com.es.transalte.skytranslate.controller;
 
+import com.es.transalte.skytranslate.handler.ProvisionalHandler;
 import com.es.transalte.skytranslate.model.FormData;
-import com.es.transalte.skytranslate.service.GoogleResourceManagerService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,10 +20,10 @@ import java.nio.charset.StandardCharsets;
 @Controller
 public class ProvisionalController {
     final Logger logger = LoggerFactory.getLogger(ProvisionalController.class);
-    private final GoogleResourceManagerService googleResourceManagerService;
+    private final ProvisionalHandler provisionalHandler;
 
-    @Autowired public ProvisionalController(GoogleResourceManagerService googleResourceManagerService) {
-        this.googleResourceManagerService = googleResourceManagerService;
+    @Autowired public ProvisionalController(ProvisionalHandler provisionalHandler) {
+        this.provisionalHandler = provisionalHandler;
     }
 
     @GetMapping("/SkyTranslate")
@@ -35,15 +35,13 @@ public class ProvisionalController {
     @PostMapping("/submitForm")
     public ResponseEntity<ByteArrayResource> submitForm(@RequestBody FormData formData) {
         try {
-            String keyData = googleResourceManagerService.processFirstPage(formData.getDealerName().toLowerCase(),
-                    formData.getCustomerName().toLowerCase(), formData.getAccountType());
+            String keyData = provisionalHandler.processFirstPage(formData.getDealerName().toLowerCase(),formData.getCustomerName().toLowerCase(), formData.getAccountType());
             ByteArrayResource resource = new ByteArrayResource(keyData.getBytes(StandardCharsets.UTF_8));
             return ResponseEntity.ok()
                     .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=response.json")
                     .contentType(MediaType.APPLICATION_JSON)
                     .body(resource);
         } catch (Exception e) {
-            //
             e.printStackTrace();
             return ResponseEntity.status(500).build();
         }

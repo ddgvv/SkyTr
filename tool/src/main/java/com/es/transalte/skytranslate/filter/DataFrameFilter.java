@@ -1,4 +1,4 @@
-package com.es.transalte.skytranslate.service;
+package com.es.transalte.skytranslate.filter;
 
 import java.util.*;
 import java.util.stream.Collectors;
