@@ -66,13 +66,13 @@
                 <label class="d-block form-group-label mb-1"
                   >Substring or regex in Dealer</label
                 >
-                <input type="text" id="filterInput" class="form-control" />
+                <input type="text" id="filterDealerInput" class="form-control" />
               </div>
               <div class="form-group" id="customerField" style="display: none">
                 <label class="d-block form-group-label mb-1"
                   >Substring or regex in Customer</label
                 >
-                <input type="text" id="filterInput" class="form-control" />
+                <input type="text" id="filterCustomerInput" class="form-control" />
               </div>
               <div
                 class="form-group"
@@ -93,30 +93,6 @@
                   <option>11/2024</option>
                 </select>
               </div>
-              <!-- <div class="form-group">
-                <label class="d-block form-group-label mb-1"
-                  >Page Translated</label
-                >
-                <select
-                  class="form-control"
-                  id="pageTranslated"
-                  multiple="multiple"
-                >
-                  <option>18.0</option>
-                  <option>1.0</option>
-                  <option>2.0</option>
-                  <option>3.0</option>
-                </select>
-              </div> -->
-              <!-- <div class="form-group">
-                <label class="d-block form-group-label mb-1">Cost</label>
-                <select class="form-control" id="cost" multiple="multiple">
-                  <option>1.44</option>
-                  <option>0.08</option>
-                  <option>0.16</option>
-                  <option>0.19</option>
-                </select>
-              </div> -->
               <div
                 class="form-group"
                 id="pageTranslatedField"
@@ -128,6 +104,7 @@
                 <input
                   type="text"
                   id="pageTranslatedSlider"
+                  class="js-range-slider"
                   name="my_range"
                   value=""
                 />
@@ -137,6 +114,7 @@
                 <input
                   type="text"
                   id="costTranslatedSlider"
+                  class="js-range-slider"
                   name="my_range01"
                   value=""
                 />
@@ -190,10 +168,19 @@
     </div>
 
     <script>
+      let billingPageData; 
+      let selectedDealerInput;
+      let selectedCustomerInput;
+      let pageTranslatedFrom = null;
+      let pageTranslatedTo = null;
+      let costFrom = null;
+      let costTo = null;
+
       // Fetch and populate data
       fetch("/billing-metrics")
         .then((response) => response.json())
         .then((data) => {
+          billingPageData = data;
           populateTable(data);
           createBarGraph(data);
         });
@@ -215,79 +202,89 @@
         });
       }
 
-      function createBarGraph(data) {
-        const customers = [...new Set(data.map((item) => item.Customer))];
-        const pagesTranslated = customers.map((customer) =>
-          data
-            .filter((item) => item.Customer === customer)
-            .reduce((sum, item) => sum + item["Pages Translated"], 0)
-        );
-        const colors = customers.map((_, i) => `hsl(${i * 50}, 70%, 50%)`);
+      let barChartInstance; // Global variable to store the chart instance
 
-        const ctx = document.getElementById("barChart").getContext("2d");
-        new Chart(ctx, {
-          type: "bar",
-          data: {
-            labels: customers,
-            datasets: [
-              {
-                data: pagesTranslated,
-                backgroundColor: colors,
-                color: "#d6eaf1",
-              },
-            ],
-          },
-          options: {
-            plugins: {
-              datalabels: {
-                color: "#d6eaf1",
-                font: {
-                  weight: "normal",
-                  size: 14,
-                },
-              },
-              title: {
-                display: false,
-                text: "Pages Translated by Customer", // Chart title
-                font: { size: 16 },
-                color: "#d6eaf1",
-              },
-              legend: {
-                display: false, // Hide legend as it is in the sidebar
-              },
-            },
-            scales: {
-              y: {
-                title: {
-                  display: true,
-                  text: "Pages Translated", // Y-axis title
-                  font: { size: 14 },
-                  color: "#d6eaf1",
-                },
-                ticks: {
-                  beginAtZero: true, // Start Y-axis from zero
-                  color: "#d6eaf1",
-                  font: { size: 12 },
-                },
-              },
-              x: {
-                title: {
-                  display: true,
-                  text: "Customers", // X-axis title (optional)
-                  font: { size: 14 },
-                  color: "#d6eaf1",
-                },
-                ticks: {
-                  color: "#d6eaf1",
-                  font: { size: 12 },
-                },
-              },
-            },
-          },
-        });
+function createBarGraph(data) {
+  const customers = [...new Set(data.map((item) => item.Customer))];
+  const pagesTranslated = customers.map((customer) =>
+    data
+      .filter((item) => item.Customer === customer)
+      .reduce((sum, item) => sum + item["Pages Translated"], 0)
+  );
+  const colors = customers.map((_, i) => `hsl(${i * 50}, 70%, 50%)`);
 
-        populateLegend(customers, colors);
-      }
+  const ctx = document.getElementById("barChart").getContext("2d");
+
+  // Destroy the existing chart instance if it exists
+  if (barChartInstance) {
+    barChartInstance.destroy();
+  }
+
+  // Create a new chart instance
+  barChartInstance = new Chart(ctx, {
+    type: "bar",
+    data: {
+      labels: customers,
+      datasets: [
+        {
+          data: pagesTranslated,
+          backgroundColor: colors,
+          color: "#d6eaf1",
+        },
+      ],
+    },
+    options: {
+      plugins: {
+        datalabels: {
+          color: "#d6eaf1",
+          font: {
+            weight: "normal",
+            size: 14,
+          },
+        },
+        title: {
+          display: false,
+          text: "Pages Translated by Customer", // Chart title
+          font: { size: 16 },
+          color: "#d6eaf1",
+        },
+        legend: {
+          display: false, // Hide legend as it is in the sidebar
+        },
+      },
+      scales: {
+        y: {
+          title: {
+            display: true,
+            text: "Pages Translated", // Y-axis title
+            font: { size: 14 },
+            color: "#d6eaf1",
+          },
+          ticks: {
+            beginAtZero: true, // Start Y-axis from zero
+            color: "#d6eaf1",
+            font: { size: 12 },
+          },
+        },
+        x: {
+          title: {
+            display: true,
+            text: "Customers", // X-axis title (optional)
+            font: { size: 14 },
+            color: "#d6eaf1",
+          },
+          ticks: {
+            color: "#d6eaf1",
+            font: { size: 12 },
+          },
+        },
+      },
+    },
+  });
+
+  populateLegend(customers, colors);
+}
+
 
       function populateLegend(customers, colors) {
         const legendList = document.getElementById("legendList");
@@ -333,10 +330,59 @@
           placeholder: "Choose an option",
         });
 
+        $("#filterDealerInput").on("change", function () {
+          selectedDealerInput = $(this).val();
+          updateDataBasedOnFilters();
+        });
+
+        $("#filterCustomerInput").on("change", function () {
+          selectedCustomerInput = $(this).val();
+          updateDataBasedOnFilters();
+        });
+
+        $("#pageTranslatedSlider").on("change", function () {
+          let my_range = $("#pageTranslatedSlider").data("ionRangeSlider");
+          pageTranslatedFrom = my_range.result.from;
+          pageTranslatedTo = my_range.result.to;
+          updateDataBasedOnFilters();
+        });        
+
+        $("#costTranslatedSlider").on("change", function () {
+          let my_range = $("#costTranslatedSlider").data("ionRangeSlider");
+          costFrom = my_range.result.from;
+          costTo = my_range.result.to;
+          updateDataBasedOnFilters();
+        });        
+
+        function updateDataBasedOnFilters() {
+          let filteredData = billingPageData;;
+
+          if(selectedCustomerInput && selectedDealerInput && selectedCustomerInput != "" && selectedDealerInput != "") {
+            console.log(selectedDealerInput + "option 1" + selectedCustomerInput);
+            filteredData = billingPageData.filter(record => record.Customer.toString().startsWith(selectedCustomerInput) 
+                        || record.Dealer.toString().startsWith(selectedDealerInput));
+          } else if (selectedCustomerInput && selectedCustomerInput != "") {
+            console.log("option 2" + selectedCustomerInput);
+            filteredData = billingPageData.filter(record => record.Customer.toString().startsWith(selectedCustomerInput));
+          }else if (selectedDealerInput && selectedDealerInput != "") {
+            console.log("option 3" + selectedDealerInput);
+            filteredData = billingPageData.filter(record => record.Dealer.toString().startsWith(selectedDealerInput));
+          }
+
+          if (pageTranslatedFrom != null) filteredData = filteredData.filter(item => item["Pages Translated"] >= pageTranslatedFrom );
+          if (pageTranslatedTo != null) filteredData = filteredData.filter(item => item["Pages Translated"] <= pageTranslatedTo );
+
+          if (costFrom != null) filteredData = filteredData.filter(item => item.Cost >= costFrom );
+          if (costTo != null) filteredData = filteredData.filter(item => item.Cost <= costTo );
+
+          populateTable(filteredData);
+          createBarGraph(filteredData);
+        }
+
         // Show/hide fields and trigger select2 for Invoice Month
         $("#filterData").on("change", function () {
           const selectedOptions = $(this).val(); // Get selected options as an array
-
+          console.log(selectedOptions);
           // Toggle visibility for each field
           toggleField(selectedOptions, "Dealer", "#dealerField");
           toggleField(selectedOptions, "Customer", "#customerField");
@@ -357,35 +403,74 @@
           }
         });
 
-        // Function to show/hide a field
         function toggleField(selectedOptions, optionValue, fieldId) {
           if (selectedOptions && selectedOptions.includes(optionValue)) {
             $(fieldId).show();
+            if(optionValue == "Pages Translated") {
+              const minMaxPages = billingPageData.reduce(
+                (acc, curr) => {
+                  return {
+                    min: Math.min(acc.min, curr["Pages Translated"]),
+                    max: Math.max(acc.max, curr["Pages Translated"]),
+                  };
+                },
+                { min: Infinity, max: -Infinity }
+              );
+
+              console.log(minMaxPages);
+              $("#pageTranslatedSlider").ionRangeSlider({
+                type: "double",
+                skin: "round",
+                grid: true,
+                step: 0.1,
+                min: minMaxPages.min,
+                max: minMaxPages.max,
+                from: minMaxPages.min,
+                to: minMaxPages.max,
+                prefix: "",
+              });
+
+            }
+            if(optionValue == "Cost") {
+              const minMaxPages = billingPageData.reduce(
+                (acc, curr) => {
+                  return {
+                    min: Math.min(acc.min, curr.Cost),
+                    max: Math.max(acc.max, curr.Cost),
+                  };
+                },
+                { min: Infinity, max: -Infinity }
+              );
+
+              $("#costTranslatedSlider").ionRangeSlider({
+                type: "double",
+                skin: "round",
+                grid: true,
+                step: 0.01,
+                min: minMaxPages.min,
+                max: minMaxPages.max,
+                from: minMaxPages.min,
+                to: minMaxPages.max,
+                prefix: "",
+              });
+
+            }
           } else {
             $(fieldId).hide();
+            console.log(optionValue);
+            if(optionValue == "Dealer") selectedDealerInput = "";
+            if(optionValue == "Customer") selectedCustomerInput = "";
+            if(optionValue == "Pages Translated") {
+              pageTranslatedFrom = null;
+              pageTranslatedTo = null;
+            }
+            if(optionValue == "Cost") {
+              costFrom = null;
+              costTo = null;
+            }
+            updateDataBasedOnFilters();
           }
         }
-      });
-
-      $("#pageTranslatedSlider").ionRangeSlider({
-        type: "double",
-        skin: "round",
-        grid: false,
-        min: 0,
-        max: 121,
-        from: 0,
-        to: 121,
-        prefix: "",
-      });
-      $("#costTranslatedSlider").ionRangeSlider({
-        type: "double",
-        skin: "round",
-        grid: false,
-        min: 0,
-        max: 9,
-        from: 0,
-        to: 9,
-        prefix: "",
       });
     </script>
   </body>
