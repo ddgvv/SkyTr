@@ -61,31 +61,24 @@
                 <option>Cost</option>
               </select>
             </div>
-            <div class="filterSection__inner">
-              <div class="form-group">
-                <label class="d-block form-group-label mb-1"
-                  >Page Translated</label
-                >
-                <input
-                  type="text"
-                  id="pageTranslatedSlider"
-                  name="my_range"
-                  value=""
-                />
-              </div>
-              <div class="form-group">
+            <div class="filterSection__inner" id="filterAdvance">
+              <div class="form-group" id="dealerField" style="display: none">
                 <label class="d-block form-group-label mb-1"
                   >Substring or regex in Dealer</label
                 >
                 <input type="text" id="filterInput" class="form-control" />
               </div>
-              <div class="form-group">
+              <div class="form-group" id="customerField" style="display: none">
                 <label class="d-block form-group-label mb-1"
                   >Substring or regex in Customer</label
                 >
                 <input type="text" id="filterInput" class="form-control" />
               </div>
-              <div class="form-group">
+              <div
+                class="form-group"
+                id="invoiceMonthField"
+                style="display: none"
+              >
                 <label class="d-block form-group-label mb-1"
                   >Invoice Month</label
                 >
@@ -100,7 +93,7 @@
                   <option>11/2024</option>
                 </select>
               </div>
-              <div class="form-group">
+              <!-- <div class="form-group">
                 <label class="d-block form-group-label mb-1"
                   >Page Translated</label
                 >
@@ -114,8 +107,8 @@
                   <option>2.0</option>
                   <option>3.0</option>
                 </select>
-              </div>
-              <div class="form-group">
+              </div> -->
+              <!-- <div class="form-group">
                 <label class="d-block form-group-label mb-1">Cost</label>
                 <select class="form-control" id="cost" multiple="multiple">
                   <option>1.44</option>
@@ -123,8 +116,23 @@
                   <option>0.16</option>
                   <option>0.19</option>
                 </select>
+              </div> -->
+              <div
+                class="form-group"
+                id="pageTranslatedField"
+                style="display: none"
+              >
+                <label class="d-block form-group-label mb-1"
+                  >Page Translated</label
+                >
+                <input
+                  type="text"
+                  id="pageTranslatedSlider"
+                  name="my_range"
+                  value=""
+                />
               </div>
-              <div class="form-group">
+              <div class="form-group" id="costField" style="display: none">
                 <label class="d-block form-group-label mb-1">Cost</label>
                 <input
                   type="text"
@@ -320,16 +328,50 @@
       // filter
       $("#filterData").select2({
         tags: true,
+        placeholder: "Choose an option",
       });
-      $("#invoiceMonth").select2({
-        tags: true,
+
+      $(document).ready(function () {
+        // Initialize Select2 for the main filter dropdown
+        $("#filterData").select2({
+          tags: true,
+          placeholder: "Choose an option",
+        });
+
+        // Show/hide fields and trigger select2 for Invoice Month
+        $("#filterData").on("change", function () {
+          const selectedOptions = $(this).val(); // Get selected options as an array
+
+          // Toggle visibility for each field
+          toggleField(selectedOptions, "Dealer", "#dealerField");
+          toggleField(selectedOptions, "Customer", "#customerField");
+          toggleField(selectedOptions, "Invoice Month", "#invoiceMonthField");
+          toggleField(
+            selectedOptions,
+            "Pages Translated",
+            "#pageTranslatedField"
+          );
+          toggleField(selectedOptions, "Cost", "#costField");
+
+          // Initialize Select2 for Invoice Month dropdown if visible
+          if (selectedOptions && selectedOptions.includes("Invoice Month")) {
+            $("#invoiceMonth").select2({
+              tags: true,
+              placeholder: "Select Invoice Month",
+            });
+          }
+        });
+
+        // Function to show/hide a field
+        function toggleField(selectedOptions, optionValue, fieldId) {
+          if (selectedOptions && selectedOptions.includes(optionValue)) {
+            $(fieldId).show();
+          } else {
+            $(fieldId).hide();
+          }
+        }
       });
-      $("#pageTranslated").select2({
-        tags: true,
-      });
-      $("#cost").select2({
-        tags: true,
-      });
+
       $("#pageTranslatedSlider").ionRangeSlider({
         type: "double",
         skin: "round",

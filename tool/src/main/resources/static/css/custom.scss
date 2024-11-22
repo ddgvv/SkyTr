@@ -166,6 +166,22 @@ body {
                 min-height: 50px;
             }
             .select2 {
+                .select2-selection__rendered {
+                    &:empty {
+                        display: none;
+                    }
+                }
+                &-search__field {
+                    color: #8bbec2;
+                    @include placeholder($color: #e4f7f9);
+                    margin-top: 8px;
+                    height: 23px;
+                    &::-webkit-input-placeholder,
+                    &::-moz-placeholder {
+                        line-height: normal;
+                        font-size: 18px;
+                    }
+                }
                 &-selection {
                     background-color: #7e99a2;
                     border-color: #7e99a2;
@@ -252,6 +268,9 @@ body {
         }
         &__inner {
             padding-left: 30px;
+            &:not(:has(.form-group)) {
+                display: none;
+            }
         }
     }
     .datagrid {
