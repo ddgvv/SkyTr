@@ -76,7 +76,7 @@ public class DealerService {
             if (checkDealer(dealerName)) {
                 try {
                     Folder folder = Folder.newBuilder()
-                            .setParent("organizations/" + orgName)
+                            .setParent(orgName)
                             .setDisplayName(dealerName)
                             .build();
                     CreateFolderRequest request = CreateFolderRequest.newBuilder()
